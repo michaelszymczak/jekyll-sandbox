@@ -2,8 +2,7 @@
 'use strict';
 
 // Directory reference:
-//   css: css
-//   sass: _scss
+//   sass/css: _scss
 //   javascript: js
 //   images: img
 //   fonts: fonts
@@ -39,6 +38,7 @@ module.exports = function (grunt) {
           src: [
             '.jekyll/**/*.html',
             '.tmp/css/**/*.css',
+            '<%= yeoman.app %>/css/**/*.css',
             '{.tmp,<%= yeoman.app %>}/js/**/*.js',
             '{<%= yeoman.app %>}/_bower_components/**/*.js',
             '<%= yeoman.app %>/img/**/*.{gif,jpg,jpeg,png,svg,webp}'
@@ -66,7 +66,8 @@ module.exports = function (grunt) {
         bsFiles: {
           src: [
             '.jekyll/**/*.html',
-            '.tmp/css/**/*.css',
+            '.css/css/**/*.css',
+            '<%= yeoman.app %>/css/**/*.css',
             '{.tmp,<%= yeoman.app %>}/js/**/*.js',
             '{<%= yeoman.app %>}/_bower_components/**/*.js',
             '<%= yeoman.app %>/img/**/*.{gif,jpg,jpeg,png,svg,webp}'
@@ -112,8 +113,8 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.app %>/_scss',
-          src: '**/*.{scss,sass}',
-          dest: '.tmp/css',
+          src: '**/*.{scss,sass,css}',
+          dest: '<%= yeoman.app %>/css',
           ext: '.css'
         }]
       },
@@ -125,8 +126,8 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.app %>/_scss',
-          src: '**/*.{scss,sass}',
-          dest: '.tmp/css',
+          src: '**/*.{scss,sass,css}',
+          dest: '<%= yeoman.app %>/css',
           ext: '.css'
         }]
       }
