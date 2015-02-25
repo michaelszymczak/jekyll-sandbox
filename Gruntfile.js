@@ -2,7 +2,8 @@
 'use strict';
 
 // Directory reference:
-//   sass/css: _scss
+//   sass: _scss
+//   css: css
 //   javascript: js
 //   images: img
 //   fonts: fonts
@@ -91,7 +92,7 @@ module.exports = function (grunt) {
           dot: true,
           src: [
             '<%= yeoman.dist %>/*',
-            '<%= yeoman.app %>/css/*',
+            '<%= yeoman.app %>/css/scss/*',
             '.sass-cache/*',
             // Running Jekyll also cleans the target directory.  Exclude any
             // non-standard `keep_files` here (e.g., the generated files
@@ -115,8 +116,8 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.app %>/_scss',
-          src: '**/*.{scss,sass,css}',
-          dest: '<%= yeoman.app %>/css',
+          src: '**/*.{scss,sass}',
+          dest: '<%= yeoman.app %>/css/scss',
           ext: '.css'
         }]
       },
@@ -128,8 +129,8 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.app %>/_scss',
-          src: '**/*.{scss,sass,css}',
-          dest: '<%= yeoman.app %>/css',
+          src: '**/*.{scss,sass}',
+          dest: '<%= yeoman.app %>/css/scss',
           ext: '.css'
         }]
       }
