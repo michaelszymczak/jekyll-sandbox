@@ -6,6 +6,7 @@
 
   background-color: #2C3E50;
   border-radius: 0px;
+  margin: 0px;
 
   a { color: $navbar-text-color  }
 
@@ -14,11 +15,16 @@
   .navbar-toggle:hover, .navbar-toggle:focus { background-color: $navbar-active-background; }
 
   .navbar-nav {
-    > li {
-      > a { color: $navbar-text-color; }
-      > a:hover { background-color: $navbar-active-background; }
+    > li > a {
+      color: $navbar-text-color;
+      padding-left: 30px; padding-right: 30px;
+      font-size: 14px;
+
     }
+    > li:hover { background-color: $navbar-active-background; }
+
     .active {
+      background-color: $navbar-active-background;
         a, a:hover, a:focus {
           background-color: $navbar-active-background;
           color: $navbar-text-color;
