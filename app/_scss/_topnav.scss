@@ -1,0 +1,30 @@
+.navbar {
+
+  $navbar-text-color: #d3d8d9;
+  $navbar-focus-text-color: White;
+  $navbar-active-background: #19242E;
+
+  background-color: #2C3E50;
+  border-radius: 0px;
+
+  a { color: $navbar-text-color  }
+
+  .navbar-brand { color: $navbar-text-color; }
+
+  .navbar-toggle:hover, .navbar-toggle:focus { background-color: $navbar-active-background; }
+
+  .navbar-nav {
+    > li {
+      > a { color: $navbar-text-color; }
+      > a:hover { background-color: $navbar-active-background; }
+    }
+    .active {
+        a, a:hover, a:focus {
+          background-color: $navbar-active-background;
+          color: $navbar-text-color;
+      }
+    }
+  }
+}
+
+

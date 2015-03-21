@@ -1,5 +1,5 @@
 $shouting-color: Orange;
+$max-width: 1016px;
 
-.sandbox {
-  background-color: $shouting-color;
-}
+@import "_general.scss";
+@import "_topnav.scss";
