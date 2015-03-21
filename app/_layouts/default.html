@@ -6,8 +6,11 @@
     <title>{{ page.title }}</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
-    <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
+
+      <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
 
   {% include styles.html %}
 
@@ -27,14 +30,26 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">Michael Szymczak</a>
+                <a class="visible-xs navbar-brand" href="/">Michael Szymczak</a>
+                {% if page.section == 'about' %}
+                    <a class="visible-xs navbar-brand" href="/about">[About]</a>
+                {% endif %}
+                {% if page.section == 'blog' %}
+                    <a class="visible-xs navbar-brand" href="/blog">[Blog]</a>
+                {% endif %}
+                {% if page.section == 'contact' %}
+                    <a class="visible-xs navbar-brand" href="/contact">[Contact]</a>
+                {% endif %}
+
+                <a class="hidden-xs navbar-brand {% if page.section == 'intro' %}active{% endif %}" href="/">Michael Szymczak</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">About<span class="sr-only">(current)</span></a></li>
-                    <li><a href="/blog">Blog</a></li>
+                    <li class="{% if page.section == 'about' %}active{% endif %}" ><a href="/about">  <span class="text">About</span>{% if page.section == 'about' %}<span class="sr-only">(current)</span>{% endif %}</a></li>
+                    <li class="{% if page.section == 'blog' %}active{% endif %}" ><a href="/blog">    <span class="text">Blog</span>{% if page.section == 'blog' %}<span class="sr-only">(current)</span>{% endif %}</a></li>
+                    <li class="{% if page.section == 'contact' %}active{% endif %}" ><a href="/contact">    <span class="text">Contact</span>{% if page.section == 'contact' %}<span class="sr-only">(current)</span>{% endif %}</a></li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container -->

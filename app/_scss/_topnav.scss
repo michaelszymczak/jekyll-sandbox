@@ -5,20 +5,26 @@
   $navbar-active-background: #19242E;
 
   background-color: #2C3E50;
-  border-radius: 0px;
-  margin: 0px;
+  border-radius: 0;
+  margin: 0;
 
-  a { color: $navbar-text-color  }
+  .text { margin-left: 0.5em; }
+  a { color: $navbar-text-color; }
 
-  .navbar-brand { color: $navbar-text-color; }
+  .navbar-brand {
+    color: $navbar-text-color;
+    &.active {
+      background-color: $navbar-active-background;
+    }
+  }
 
   .navbar-toggle:hover, .navbar-toggle:focus { background-color: $navbar-active-background; }
 
   .navbar-nav {
     > li > a {
       color: $navbar-text-color;
-      padding-left: 30px; padding-right: 30px;
-      font-size: 14px;
+      padding-left: 20px; padding-right: 25px;
+      font-size: 15px;
 
     }
     > li:hover { background-color: $navbar-active-background; }
