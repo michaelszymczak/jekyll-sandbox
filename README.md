@@ -3,28 +3,26 @@ Sanbox for playing with jekyll
 
 ## Features
 
-**During setup you can choose:**
-
 - [Compass](http://compass-style.org/), [Sass](http://sass-lang.com/), or vanilla CSS
-- [CoffeeScript](http://coffeescript.org/) or vanilla JavaScript
 - Automatic CSS vendor prefixing with [Autoprefixer](https://github.com/ai/autoprefixer)
 - Default Jekyll or [HTML5 Boilerplate](http://html5boilerplate.com/) templates
-- Common Jekyll configuration options
-
-**Generator-jekyllrb always includes:**
-
 - Built in preview server with [BrowserSync](http://www.browsersync.io/)
 - Automatic Jekyll and preprocessor compiling
 - Code quality checks with [Jshint](http://www.jshint.com/) and/or [CoffeeLint](http://www.coffeelint.org/), [CssLint](http://csslint.net/), and `jekyll doctor`
 - An automatic build process that includes concatenation, image optimization, CSS and HTML minification, JS uglification, and asset revving to bust those caches
 
-## Getting Started
+## Prerequisites
 
-- generator-jekyllrb requires [Node.js](http://nodejs.org/) `>= 0.10`, [Ruby](http://www.ruby-lang.org/) `>= 1.9`
-- Install the generator: `npm install -g generator-jekyllrb`
-- Run: `yo jekyllrb`
+- [Node.js](http://nodejs.org/) `>= 0.10`
+- Npm
+- [Ruby](http://www.ruby-lang.org/) `>= 1.9`
 
-## Grunt Workflow
+## First run
+
+    npm install
+    ./bower install
+
+## Workflow
 
 #### grunt serve
 

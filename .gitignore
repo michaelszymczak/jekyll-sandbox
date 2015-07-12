@@ -35,7 +35,7 @@ Thumbs.db
 # Ignore for Yeoman-Jekyll projects #
 app/_bower_components
 app/css/scss
-dist
+dist/
 node_modules
 .tmp
 
@@ -43,3 +43,7 @@ node_modules
 .ruby-version
 .ruby-gemset
 .rvmrc
+
+# Ignore IDEs
+/*.iml
+/.idea/
