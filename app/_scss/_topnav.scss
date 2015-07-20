@@ -4,15 +4,24 @@
   $navbar-focus-text-color: White;
   $navbar-active-background: #19242E;
 
+  $navbar-height: 40px;
+  $navbar-padding: 10px 25px 10px 20px;
+
   background-color: #2C3E50;
   border-radius: 0;
   margin: 0;
+  min-height: $navbar-height;
+  border: none;
 
   .text { margin-left: 0.5em; }
   a { color: $navbar-text-color; }
 
   .navbar-brand {
     color: $navbar-text-color;
+    padding: $navbar-padding;
+    height: $navbar-height;
+
+
     &.active {
       background-color: $navbar-active-background;
     }
@@ -23,8 +32,9 @@
   .navbar-nav {
     > li > a {
       color: $navbar-text-color;
-      padding-left: 20px; padding-right: 25px;
+      padding: $navbar-padding;
       font-size: 15px;
+      height: $navbar-height;
 
     }
     > li:hover { background-color: $navbar-active-background; }
