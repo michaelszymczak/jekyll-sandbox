@@ -1,6 +1,9 @@
+// Google Fonts
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic|Bitter:400,700&subset=latin,latin-ext);
+
 html, body, button, input, select, textarea {
-  font-family: "Source Sans Pro",Helvetica,sans-serif;
-  font-size: 18px;
+  font-family: 'Source Sans Pro', Helvetica, sans-serif;
+  font-size: 15px;
 }
 
 .document {
@@ -9,4 +12,16 @@ html, body, button, input, select, textarea {
   margin-right: auto ;
   background-color: White;
 //  border: 1px solid Red;
+}
+
+#testheader {
+  font-family: Bitter, Georgia, serif;
+  font-size: 48px;
+  font-weight: bold;
+  color: #424242;
+}
+
+#testsubheader {
+  font: 300 italic 24px "Source Sans Pro", Helvetica, sans-serif;
+  color: #424242;
 }
