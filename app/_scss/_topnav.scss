@@ -1,17 +1,27 @@
+@import "_variables.scss";
+
 .navbar {
 
   $navbar-text-color: #d3d8d9;
   $navbar-focus-text-color: White;
   $navbar-active-background: #19242E;
+  $navbar-background: $decoration-color;
 
   $navbar-height: 40px;
   $navbar-padding: 10px 25px 10px 20px;
+  $navbar-leftshift: 210px;
 
-  background-color: #2C3E50;
+  background-color: $navbar-background;
   border-radius: 0;
-  margin: 0;
   min-height: $navbar-height;
   border: none;
+  margin: 0;
+  padding: 0;
+
+  @media (min-width: $screen-lg-min) {
+    margin: 0 0 0 (-$navbar-leftshift);
+  }
+
 
   .text { margin-left: 0.5em; }
   a { color: $navbar-text-color; }
@@ -25,6 +35,15 @@
     &.active {
       background-color: $navbar-active-background;
     }
+
+
+    &.navbar-title {
+      @media (min-width: $screen-lg-min) {
+        width: $navbar-leftshift;
+        text-align: center;
+      }
+    }
+
   }
 
   .navbar-toggle:hover, .navbar-toggle:focus { background-color: $navbar-active-background; }

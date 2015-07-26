@@ -1,0 +1,60 @@
+@import "_variables.scss";
+
+.intro {
+  position: relative;
+  padding: 0;
+  margin: 0;
+
+  blockquote {
+    border: none;
+    text-align: justify;
+    font-size: 24px;
+    font-style: italic;
+    font-weight: 300;
+  }
+
+
+  .intro-top {
+    .text {
+      z-index: 100;
+      position: absolute;
+      left: 100px;
+      top: 150px;
+      width: 350px;
+      color: white;
+    }
+  }
+
+  .intro-remaining {
+    padding-top: 50px;
+    border-left: 1px solid $light-decoration-color;
+
+
+    .text {
+
+    }
+
+    .quick-menu {
+      border-left: 1px solid $light-decoration-color;
+      padding-top: 15px;
+      padding-left: 30px;
+      margin-left: 50px;
+
+      h3 {
+        padding: 0 0 1em 0;
+        margin: 0;
+        font: 300 italic 24px "Source Sans Pro", Helvetica, sans-serif;
+      }
+
+      ul {
+        padding: 0;
+        li {
+          list-style: none;
+          padding-bottom: 1em;
+          color: #79a5c7;
+        }
+      }
+    }
+  }
+
+}
