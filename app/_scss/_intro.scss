@@ -8,11 +8,10 @@
   blockquote {
     border: none;
     text-align: justify;
-    font-size: 24px;
     font-style: italic;
     font-weight: 300;
+    @media (min-width: $screen-sm-min) { font-size: 24px; }
   }
-
 
   .intro-top {
     .text {
@@ -28,11 +27,6 @@
   .intro-remaining {
     padding-top: 50px;
     border-left: 1px solid $light-decoration-color;
-
-
-    .text {
-
-    }
 
     .quick-menu {
       border-left: 1px solid $light-decoration-color;

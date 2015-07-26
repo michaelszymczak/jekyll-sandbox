@@ -12,24 +12,27 @@
 <nav class="navbar navbar-inverse visible-xs">
   <div>
     <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
+    <div class="navbar-header navbar-mobile">
+
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="hidden-xs navbar-title navbar-brand {% if page.section == 'intro' %}active{% endif %}" href="/">Michael Szymczak</a>
+
       <a class="visible-xs navbar-brand" href="/">Michael Szymczak</a>
+
       {% if page.section == 'about' %}
-      <a class="visible-xs navbar-brand" href="/about">[About]</a>
+      <a class="visible-xs navbar-brand" href="/about">| About</a>
       {% endif %}
       {% if page.section == 'blog' %}
-      <a class="visible-xs navbar-brand" href="/blog">[Blog]</a>
+      <a class="visible-xs navbar-brand" href="/blog">| Blog</a>
       {% endif %}
       {% if page.section == 'contact' %}
-      <a class="visible-xs navbar-brand" href="/contact">[Contact]</a>
+      <a class="visible-xs navbar-brand" href="/contact">| Contact</a>
       {% endif %}
+
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->

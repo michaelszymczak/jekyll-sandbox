@@ -12,17 +12,11 @@ html, body, button, input, select, textarea {
   margin-left: auto ;
   margin-right: auto ;
   background-color: White;
-//  border: 1px solid Red;
 }
 
-#testheader {
-  font-family: Bitter, Georgia, serif;
-  font-size: 48px;
-  font-weight: bold;
-  color: #424242;
-}
-
-#testsubheader {
-  font: 300 italic 24px "Source Sans Pro", Helvetica, sans-serif;
-  color: #424242;
+.content {
+  margin: 1em 5px;
+  padding: 0 1em;
+  border-left: solid 1px $light-decoration-color;
+  border-top: solid 1px $light-decoration-color;
 }
