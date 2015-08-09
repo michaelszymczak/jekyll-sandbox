@@ -10,11 +10,8 @@
     border: none;
     text-align: justify;
     font-style: italic;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 100;
-
-    @media (min-width: $screen-sm-min) { font-size: 22px; }
-
   }
 
   .intro-top {

@@ -31,14 +31,6 @@
       background-color: $navbar-active-background;
     }
 
-
-    &.navbar-title {
-      @media (min-width: $screen-lg-min) {
-        width: $navbar-leftshift;
-        text-align: center;
-      }
-    }
-
   }
 
   .navbar-mobile {
