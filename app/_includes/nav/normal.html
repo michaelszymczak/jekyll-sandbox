@@ -1,4 +1,8 @@
 <nav class="navbar navbar-inverse hidden-xs">
-  {% include nav/normal_title.html %}
-  {% include nav/normal_links.html %}
+  <ul class="nav navbar-nav">
+    <li><a class="navbar-title navbar-brand {% if page.section == 'intro' %}active{% endif %}" href="/">Michael Szymczak</a></li>
+    <li class="{% if page.section == 'about' %}active{% endif %}" ><a href="/about"><span class="text">About</span>{% if page.section == 'about' %}<span class="sr-only">(current)</span>{% endif %}</a></li>
+    <li class="{% if page.section == 'blog' %}active{% endif %}" ><a href="/blog">    <span class="text">Blog</span>{% if page.section == 'blog' %}<span class="sr-only">(current)</span>{% endif %}</a></li>
+    <li class="{% if page.section == 'contact' %}active{% endif %}" ><a href="/contact">    <span class="text">Contact</span>{% if page.section == 'contact' %}<span class="sr-only">(current)</span>{% endif %}</a></li>
+  </ul>
 </nav>

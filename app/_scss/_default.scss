@@ -1,1 +1,18 @@
 @import "_variables.scss";
+
+.content-quick {
+  padding-top: 20px;
+  padding-left: 10px;
+  ul {
+    padding-left: 10px;
+    list-style: none;
+  }
+}
+
+.content-main {
+  text-align: justify;
+  border-right: 1px solid $light-decoration-color;
+  margin-top: 10px;
+  //padding-left: 0px;
+  //margin-left: 0px;
+}
