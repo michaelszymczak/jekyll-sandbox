@@ -1,9 +1,1 @@
 @import "_variables.scss";
-
-.default-content {
-  text-align: justify;
-  max-width: $max-width;
-  @media (min-width: $screen-lg-min) {
-    border-left: solid 1px $light-decoration-color;
-  }
-}

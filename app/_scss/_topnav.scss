@@ -20,10 +20,6 @@
   font-size: 15px;
   font-weight: 100;
 
-  @media (min-width: $screen-lg-min) {
-    margin: 0 0 0 (-$navbar-leftshift);
-  }
-
 
   .text { margin-left: 0.5em; }
   a { color: $navbar-text-color; }
