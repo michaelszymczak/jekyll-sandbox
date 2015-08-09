@@ -3,8 +3,8 @@
 # 2. config.build.yml
 # 3. config.yml
 
-name: blog1
-description: Michael Szymczak
+name: Michael Szymczak
+description: Pursuing excellence in software development
 author:
   name: Michael Szymczak
   email: contact@michaelszymczak.com
@@ -19,12 +19,10 @@ include: ['.htaccess']
 future: true
 show_drafts: true
 
-permalink: none
+permalink: article/:title.html
 paginate: 10
 paginate_path: 'page:num'
 
 # Markdown library
 markdown: redcarpet
 #   extensions: ['fenced_code_blocks', 'smart']
-
-pygments: true
