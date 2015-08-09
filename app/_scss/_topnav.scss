@@ -9,7 +9,6 @@
 
   $navbar-height: 40px;
   $navbar-padding: 10px 25px 10px 20px;
-  $navbar-leftshift: 210px;
 
   background-color: $navbar-background;
   border-radius: 0;
@@ -17,6 +16,9 @@
   border: none;
   margin: 0;
   padding: 0;
+
+  font-size: 15px;
+  font-weight: 100;
 
   @media (min-width: $screen-lg-min) {
     margin: 0 0 0 (-$navbar-leftshift);
@@ -57,8 +59,8 @@
     > li > a {
       color: $navbar-text-color;
       padding: $navbar-padding;
-      font-size: 15px;
       height: $navbar-height;
+
 
     }
     > li:hover { background-color: $navbar-active-background; }
