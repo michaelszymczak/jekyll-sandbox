@@ -14,3 +14,85 @@
   border-right: 1px solid $light-decoration-color;
   margin-top: 10px;
 }
+
+.content-main {
+
+  section {
+    margin-bottom: 3em;
+    clear: both;
+  }
+
+  h1 {
+    font-size: 48px;
+    font-weight: bold;
+    font-family: $font-family-maintitle;
+    line-height: 0.6;
+    color: #424242;
+    border-bottom: 1px solid $light-decoration-color;
+    margin-top: 0.8em;
+    margin-bottom: 0.8em;
+
+    &.giveMeSomeSpace {
+      margin-top: 2.5em;
+    }
+
+    small {
+      font: $font-subtitle;
+    }
+  }
+
+  ul {
+    list-style-type: square;
+  }
+
+  p {
+    text-align: justify;
+  }
+
+  a {
+    color: #CA3C08;
+  }
+
+}
+
+.portfolio {
+  font-size: 11pt;
+
+  .portfolio-entry {
+    border-right: 2px solid #EBF0F1;
+    margin-right: 2px;
+  }
+
+
+  h3 {
+    background-color: #EBF0F1;
+    padding: 1em;
+    margin-bottom: 1.5em;
+  }
+
+  table {
+    td {
+      padding: 0.5em 1em 0 0;
+    }
+    tr {
+      border-bottom: 1px solid $light-decoration-color;
+    }
+  }
+
+  .row {
+    padding: 0 15px;
+    text-align: justify;
+  }
+
+  .portfolio-block {
+    margin-bottom: 1em;
+  }
+
+  blockquote {
+    border: none;
+    img {
+      margin-bottom: 0.5em;
+    }
+  }
+
+}
