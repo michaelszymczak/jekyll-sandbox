@@ -1,15 +1,13 @@
 ---
-layout: default
+layout: main
 title: Michael Szymczak's Blog
 section: blog
 ---
-
+<div class="content-main col-sm-9 col-xs-12">
+{% include content/main_title.html main="Michael's Blog" %}
 
 <section class="home posts">
-  <h1>
-    Blog Posts<br/>
-    <small>on my pursuing of excellence in software development</small>
-  </h1>
+  <h2>Recent posts</h2>
   {% for post in site.posts %}
     <article><time>{{ post.date | date_to_string }}</time> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></article>
   {% endfor %}
@@ -18,5 +16,14 @@ section: blog
 <div class="sandbox">
     Some sandbox text
 </div>
+</div>
 
-Contact
+
+<div class="content-quick col-sm-3 col-xs-12">
+  <h2>Jump to</h2>
+  <ul>
+    <li>foo</li>
+    <li>bar</li>
+    <li>baz</li>
+  </ul>
+</div>

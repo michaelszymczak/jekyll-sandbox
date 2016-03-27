@@ -1,11 +1,12 @@
 @import "_variables.scss";
 
 .content-quick {
-  padding-top: 20px;
+  padding-top: 30px;
   padding-left: 10px;
   ul {
     padding-left: 10px;
     list-style: none;
+    font-variant: small-caps;
   }
 }
 
@@ -26,7 +27,7 @@
     font-size: 48px;
     font-weight: bold;
     font-family: $font-family-maintitle;
-    line-height: 0.6;
+    line-height: 1em;
     color: #424242;
     border-bottom: 1px solid $light-decoration-color;
     margin-top: 0.8em;
@@ -36,7 +37,19 @@
       margin-top: 2.5em;
     }
 
+    a.backToTheTop {
+      font-weight: normal;
+      font-variant: small-caps;
+      font-size: small;
+      color: $decoration-color;
+      padding-right: 1em;
+      display: block;
+      text-align: right;
+      border-right: 1em solid $light-decoration-color;
+    }
+
     small {
+      display: block;
       font: $font-subtitle;
     }
   }

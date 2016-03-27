@@ -1,10 +1,10 @@
 ---
-layout: default
-title: About Michael Szymczak
+layout: main
+title: About - Michael Szymczak
 section: about
 ---
-
-<h1>Michael Szymczak<br/><small>Pursuing excellence in software development</small></h1>
+<div id="ref-top" class="content-main col-sm-9 col-xs-12">
+{% include content/main_title.html main="Michael Szymczak" sub="Pursuing excellence in software development" %}
 
 <section>
 <h2 id="ref-myvalues">My values</h2>
@@ -39,7 +39,9 @@ section: about
   </p>
 </section>
 
-<h1  id="ref-portfolio" class="giveMeSomeSpace">Portfolio<br/>
+<h1  id="ref-portfolio" class="giveMeSomeSpace">
+  <a class="backToTheTop" href="#ref-top">Go back</a>
+  Portfolio<br/>
   <small>Products I designed, projects I participated in and lessons I have learned</small>
 </h1>
 
@@ -58,7 +60,7 @@ section: about
       </div>
       <div class="col-md-6 portfolio-block">
         <blockquote>
-        <img class="image" src="/img/about/oeo.png"/><br/>
+        <img class="image" src="{{ site.url }}/img/about/oeo.png"/><br/>
         Oxfordenglishonline was No. 1 English Language Teaching platform in Poland.
         </blockquote>
       </div>
@@ -102,7 +104,7 @@ section: about
       </div>
       <div class="col-md-6 portfolio-block">
         <blockquote>
-          <img class="image" src="/img/about/wsipnet_logo.png"/><br/>
+          <img class="image" src="{{ site.url }}/img/about/wsipnet_logo.png"/><br/>
           The best educational product of the year in 2012, according to MEN.
         </blockquote>
       </div>
@@ -140,7 +142,7 @@ section: about
         </table>
       </div>
       <div class="col-md-6 portfolio-block">
-        <blockquote><img class="image" src="/img/about/pmi.png"/></blockquote>
+        <blockquote><img class="image" src="{{ site.url }}/img/about/pmi.png"/></blockquote>
       </div>
     </div>
     <div class="row">
@@ -178,7 +180,7 @@ section: about
       </div>
       <div class="col-md-6 portfolio-block">
         <blockquote>
-          <img class="image" src="/img/about/pokeprojekt.png"/><br/>
+          <img class="image" src="{{ site.url }}/img/about/pokeprojekt.png"/><br/>
           Probably the biggest Japanese-Polish online dictionary in the world.
         </blockquote>
       </div>
@@ -192,4 +194,16 @@ section: about
       </div>
     </div>
   </div>
+</div>
+</div>
+
+
+<div class="content-quick col-sm-3 col-xs-12">
+  <h2>Jump to</h2>
+  <ul>
+    <li><a href="#ref-top">top</a></li>
+    <li><a href="#ref-myvalues">my values</a></li>
+    <li><a href="#ref-mytechnique">my technique</a></li>
+    <li><a href="#ref-portfolio">portfolio</a></li>
+  </ul>
 </div>
