@@ -4,8 +4,6 @@ title:  "Yo Jekyll!"
 category: software
 ---
 
-# 'Allo, 'Allo!
-
 You now have
 
 - Jekyll
@@ -15,5 +13,5 @@ You now have
 - redcarpet markdown parser and Pygments highlighter
 
 installed.
-
+<span class="readmore"/>
 **Enjoy coding!**

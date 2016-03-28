@@ -23,6 +23,9 @@ permalink: article/:title.html
 paginate: 10
 paginate_path: 'page:num'
 
+excerpt_separator: <span class="readmore"/>
+
 # Markdown library
 markdown: redcarpet
+
 #   extensions: ['fenced_code_blocks', 'smart']
