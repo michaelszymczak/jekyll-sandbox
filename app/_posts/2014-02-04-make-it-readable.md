@@ -4,8 +4,9 @@ title:  "Make it readable"
 category: software
 tags: ["behavior-driven-development", "specification-by-example"]
 ---
-
+<p class="excerpt">
 Imagine that your department is building a web application for some banking institution and the purpose of this app is to help the bank customers understand better what happens with their money when they perform operations like opening a deposit account, making a consolidation loan etc.
+</p>
 
 In order to share common understanding of what exactly should be built, you decided to use Specification by Example. You’ve heard that one of the ways of doing this is to create scenarios describing required features. You’ve also heard that these scenarios should be runnable like any normal test and should automatically verify if the app behaves as expected. After several discussions with stakeholders, many of which were subject-matter experts, you prepared wireframes that should help you communicate with them better. Most of the people are visualizers after all and these wireframes help everyone express their vision and decide what they really want. You used these wireframes during the requirements gathering session.
 <span class="readmore"/>
@@ -14,12 +15,12 @@ In order to share common understanding of what exactly should be built, you deci
 
 One of the requirements identified during this session was a user story that reads:
 
-{% highlight gherkin %}
+~~~gherkin
 Feature: Premature cancellation simulation
     As a bank customer facing unpredictable future
     I want to know what happens with my money in case of a time deposit premature cancellation    
     So that I can decide if I am ready to open such deposit.
-{% endhighlight %}
+~~~
 
 
 You discussed user journeys and one of the dialogues went like this:
@@ -42,11 +43,12 @@ You discussed user journeys and one of the dialogues went like this:
 </div>
 
 
-Now, read the requirements gathering session carefully one more time and think about the test scenario you would build for this requirement. If you’ve never written any scenario, here you have an explanation what the Specification by Example is (TODO: link).
+Now, read the requirements gathering session carefully one more time and think about the test scenario you would build for this requirement.
+If you’ve never written any scenario, here you have an explanation of [what the Specification by Example is]({% post_url 2013-12-23-specification-by-example %}).
 
 Came up with something? Below you can see what would possibly be created if we passed this discussed previously requirements to a developer, inexperienced in terms of Specification by Example, telling him that he should automate it using Gherking language and leaving him alone with this task:
 
-{% highlight gherkin %}
+~~~gherkin
 Feature: Deposit cancellation
 Given "#main div.currentaccount.blue div.balance" containing "<strong>0</strong> $"
   And "#main div.timedeposit div.balance" contains "<strong>100</strong> $"
@@ -57,7 +59,7 @@ When  the user clicks "#main div.timedeposit button.cancel"
   And wait 1 second
 Then  "#main div.currentaccount.blue div.balance" contains "<strong>100</strong> $"
   And "#main div.timedeposit div.balance" is not visible
-{% endhighlight %}
+~~~
 
 I’ve seen this kind of scenarios many times. However, I’ll try to explain why this is not appropriate scenario for Specification by Example.
 
@@ -72,7 +74,7 @@ I’ve seen this kind of scenarios many times. However, I’ll try to explain wh
 There are many more pitfalls, but today I wanted to focus on the most important, which is the lack of readability.
 Let's try to improve it a bit and make it more readable for non tech-savvy people:
 
-{% highlight gherkin %}
+~~~gherkin
 Feature: Deposit cancellation
 Given current account blue area containing $0
   And time deposit balance area containing $100
@@ -83,7 +85,7 @@ When  the user clicks cancel button within the time deposit area
   And wait 1 second
 Then  current account blue area should contain $100
   And time deposit balance area is not visible
-{% endhighlight %}
+~~~
 
 Now it looks better. We simply got rid of technical jargon. That is a step in the right direction. Is the story more readable now? Yes. Is it good enough to communicate with stakeholders and keep the cost of maintenance low? Definitely not. Why? You’ve probably spotted a few low hanging fruits there. I’ll show in the next few posts how we can incrementally improve this scenario, focusing on different aspects of a good specification.
 

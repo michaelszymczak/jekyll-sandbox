@@ -30,7 +30,7 @@
 
     .date {
       background-color: $color-interesting;
-      padding: 0.3em 1em;
+      padding: 0.3em 0.5em;
       margin-top: 0.2em;
       margin-bottom: 0.5em;
       text-align: center;
@@ -51,10 +51,27 @@
     margin-bottom: 20px;
   }
 
-  div.dialogue {
+  .dialogue {
     margin: 1em 0;
     padding: 1em;
     font-size: 80%;
     border-left: 5px solid $light-decoration-color;
+  }
+
+  article.post {
+
+    p.excerpt::first-letter {
+      font-size: 30pt;
+      text-align: left;
+      margin-bottom: 0.2em;
+      margin-left: 2em;
+      margin-right: 0.1em;
+      line-height: 100%;
+      font-family: $font-family-maintitle;
+    }
+  }
+
+  .highlight {
+    margin-bottom: 1em;
   }
 }

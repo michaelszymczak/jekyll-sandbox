@@ -7,8 +7,8 @@ section: blog
   <div class="description">
     <div class="date col-xs-5 col-sm-3">{{ page.date | date: "%-d %B %Y"}}</div>
     <div class="tags">
-      {% for tag in site.tags %}
-        <span class="tag"><i class="fa fa-tag fa-sm"></i>{{ tag | first }}</span>
+      {% for tag in page.tags %}
+        <span class="tag"><i class="fa fa-tag fa-sm"></i>{{ tag }}</span>
       {% endfor %}
     </div>
   </div>
@@ -19,9 +19,9 @@ section: blog
 
 <div class="content-quick-blog col-sm-3 col-xs-12">
   <h4>Michael Szymczak's blog</h4>
-  <ul>
-    <li>foo</li>
-    <li>bar</li>
-    <li>baz</li>
-  </ul>
+  <!--<ul>-->
+    <!--<li>foo</li>-->
+    <!--<li>bar</li>-->
+    <!--<li>baz</li>-->
+  <!--</ul>-->
 </div>
