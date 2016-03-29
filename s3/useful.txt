@@ -1,0 +1,9 @@
+http://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-custom-domain-walkthrough.html
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html
+https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-custom-domain-walkthrough.html
+https://docs.aws.amazon.com/AmazonS3/latest/dev/HowDoIWebsiteConfiguration.html
+https://github.com/laurilehmijoki/s3_website
+https://github.com/laurilehmijoki/s3_website/blob/master/additional-docs/example-configurations.md#minimal
+http://danielwhyte.com/app/design/2014/10/05/creating-a-jekyll-s3-server.html
+https://www.maxmasnick.com/2012/01/21/jekyll_s3_cloudfront/
