@@ -32,7 +32,7 @@ Although the scenario above describes the feature so that one can have a general
 
 *Warning: For the sake of brevity this example does not reflect the actual deposit rules, interest rates etc. Do not try to launch your own banking service after reading the article. ;)*
 
-Imagine two teams – team A and team B. Developers and subject matter experts aren’t collocated and the stakeholders have some pre-allocated time once a week. Both team use this time slot to run a sprint demo and then to plan the work for the next sprint. Team A uses automated use cases, but no business rules tests, let alone the Specification by Example. Team B uses automated use cases and also business rules tests with Specification by Example.
+Imagine two teams – team A and team B. Developers and subject matter experts aren’t collocated and the stakeholders have some pre-allocated time once a week. Both teams use this time slot to run a sprint demo and then to plan the work for the next sprint. Team A uses automated use cases, but no business rules tests, let alone the Specification by Example. Team B uses automated use cases and also business rules tests with Specification by Example.
 
 ### Team A: no business rules tests, nor Specification by Example
 
@@ -70,7 +70,7 @@ Then I should have <GBP> pounds transferred to my account
 {% endhighlight %}
 
 <p class="dialogue">
-- I’ll give you some example <MONTHS>, <DAYS> values and ask you how many <GBP> should I expect in each case, OK? First, if I cancel the deposit after 0 MONTHS and 0 DAYS, I’ll have the very same amount, that is 100 pounds, am I right?<br/>
+- I’ll give you some example &lt;MONTHS&gt;, &lt;DAYS&gt; values and ask you how many &lt;GBP&gt; should I expect in each case, OK? First, if I cancel the deposit after 0 MONTHS and 0 DAYS, I’ll have the very same amount, that is 100 pounds, am I right?<br/>
 - Not quite. Indeed, we do not charge our clients for premature cancellation, but for some reasons, we need to freeze the money for at least a week.<br/>
 - OK. But you can cancel it after the first week and you aren’t extra charged?<br/>
 - That’s right.<br/>
