@@ -30,3 +30,5 @@ excerpt_separator: <span class="readmore"/>
 markdown: redcarpet
 
 #   extensions: ['fenced_code_blocks', 'smart']
+
+gems: [jekyll-paginate]
