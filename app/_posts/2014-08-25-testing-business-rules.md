@@ -21,8 +21,7 @@ Scenario: A user cancels the deposit prematurely.
 Given the time deposit summary screen with the open time deposit
 When  as a deposit owner I confirm the time deposit cancellation
 Then  the time deposit should be cancelled
-And   the money from the cancelled time deposit should be 
-      transferred back to the current deposit
+And   the money from the cancelled time deposit should be transferred back to the current deposit
 {% endhighlight %}
 
 Although the scenario above describes the feature so that one can have a general understanding of the expected behaviour, it provides no information about underlying business rules. Now it’s good time to introduce the next kind of business-facing tests I use: Business rules tests using Specification by Example. 
