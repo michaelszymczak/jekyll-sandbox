@@ -1,3 +1,9 @@
-source "http://rubygems.org"
+# frozen_string_literal: true
+# A sample Gemfile
+source "https://rubygems.org"
 
-gem 'jekyll', '~> 2.3.0'gem 'redcarpet'gem 'sass', '~> 3.4.3'
+# gem "rails"
+gem "jekyll-paginate"
+gem "kramdown"
+gem "redcarpet"
+gem "rouge"
