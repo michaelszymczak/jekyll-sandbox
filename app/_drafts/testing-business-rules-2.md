@@ -43,56 +43,24 @@ We can use that step by step description and use it as our test, but we should a
 
 The rules behind the figures above becomes pretty clear after looking at them for a few seconds. For a one year long deposit:
 
-One cannot cancel the deposit before 7th day
-
-<pre>
-MONTHS | DAYS | GBP
-0      | 6    | X
-0      | 7    | 100
-</pre>
-
-One receives the same amount as deposited if the deposit cancelled within first 6 months
-
-<pre>
-MONTHS | DAYS | GBP
-0      | 7    | 100
-6      | 0    | 100
-</pre>
-
-One receives the deposited amount plus half of the interest if the deposit cancelled after 6 months and within the first year
-
-<pre>
-MONTHS | DAYS | GBP
-6      | 1    | 101
-12     | 0    | 101
-</pre>
-
-The deposit is automatically renewed if not cancelled and the rules 2 and 3 apply
-
-<pre>
-MONTHS | DAYS | GBP
-12     | 1    | 102
-18     | 0    | 102
-18     | 1    | 103
-24     | 1    | 104
-</pre>
-
+- One receives the same amount as deposited if the deposit cancelled within first 6 months
+- One receives the deposited amount plus half of the interest if the deposit cancelled after 6 months and within the first year
+- The deposit is automatically renewed if not cancelled and the rules 2 and 3 apply
+- One cannot cancel the deposit before 7th day
 
 We have identified business rules, used examples supporting them and confirmed our assumptions with business. Now it’s time to make that specification runnable. The tool you pick depends mainly on your organization (i.e. what happens when the change or new feature is requested). 
 
 ## Pick the tool
 
 If business wants to own the specification you should use a tool that allows modifying specification even by people that can’t code. (On JVM it would be Cucumber, Fitnesse, Concordion...). You should also appreciate their willingness to participate in the process and spend enough time pairing with them on improving the quality of the specification. On the other hand, if devs are the only ones that maintain the specification (i.e. if business wants to change something, asks devs to do so), you should probably continue using what you already know - some kind of an xUnit library, Spock Framework etc. There is no point paying the price of  additional layers of indirection and shared artifacts such as *.feature files if there is no one that we can share the artifacts with.
-Let’s assume we are lucky enough to work in an environment in which all the parties collaborate to create and automate the specification. We picked Concordion as it makes editing specification pretty straightforward and it also provides nice-looking reports.
+Let’s assume we are lucky enough to work in an environment in which all the parties collaborate to create and automate the specification.
+We picked [Concordion](http://concordion.org/) as it makes editing specification pretty straightforward and it also provides nice-looking reports.
 
 ## Adapt specification
-By adapt I mean modify if so that the tool of your choice can make use of it. You may need to add some markdown, tags, keywords, format it etc. 
+By adapt I mean modify it so that the tool of your choice can make use of it. You may need to add some markdown, tags, keywords, format it etc.
+As we use Concordion to run our specification, we can instrument a markdown, which is the least verbose way of preparing it.
 
+I have created a sample project that shows how you can do that and make it a part of your continuous integration pipeline: 
+[https://github.com/michaelszymczak/blog-testing-business-rules-2 - step 1, instrumenting the specification](https://github.com/michaelszymczak/blog-testing-business-rules-2/tree/34d8610abd98ad871c5489e3818bee6ccddf65af)
 
-
-
-Lorem ipsum 
-
-{% gist 5555251 gist.md %}
-
-Lorem ipsum
+In the next posts I will explain it in details, but for the time being let's focus of the outcome, which is a runnable specification verifying business rules.
