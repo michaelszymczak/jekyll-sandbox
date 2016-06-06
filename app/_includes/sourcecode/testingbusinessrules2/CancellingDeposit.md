@@ -15,7 +15,7 @@ prematurely.
 
 ## Scenario: Calculate the amount to be transferred after the cancellation
 
-Given an X year(x) long time deposit
+Given an X year(s) long time deposit
 
 And the initial amount of Y pounds
 
@@ -29,7 +29,8 @@ Then I should have TRANSFERRED pounds transferred to my account
 
 ### [One receives the same amount as deposited if the deposit cancelled during the first half](- "first half c:status=ExpectedToFail")
 
-For [1][length] year long deposit with [100][initial] initial amount and [2][interestrate]% interest rate:
+For [1][length] year long deposit with [100][initial] initial amount and [2][interestrate]% interest rate,
+when I cancel it after MONTHS and DAYS:
 
 | [cancel][][MONTHS][months] | [DAYS][days] | [TRANSFERRED][transferred] ||
 | :------------------------: | :----------: | :-------------------------: |
@@ -38,7 +39,8 @@ For [1][length] year long deposit with [100][initial] initial amount and [2][int
  
 ### [One receives the deposited amount plus half of the interest if the deposit cancelled after 6 months and within the first year](- "second half c:status=ExpectedToFail")
 
-For [1][length] year long deposit with [100][initial] initial amount and [2][interestrate]% interest rate:
+For [1][length] year long deposit with [100][initial] initial amount and [2][interestrate]% interest rate,
+when I cancel it after MONTHS and DAYS:
 
 | [cancel][][MONTHS][months] | [DAYS][days] | [TRANSFERRED][transferred] ||
 | :------------------------: | :----------: | :-------------------------: |
@@ -47,7 +49,8 @@ For [1][length] year long deposit with [100][initial] initial amount and [2][int
 
 ### [The deposit is automatically renewed if not cancelled](- "renewal c:status=ExpectedToFail")
 
-For [1][length] year long deposit with [100][initial] initial amount and [2][interestrate]% interest rate:
+For [1][length] year long deposit with [100][initial] initial amount and [2][interestrate]% interest rate,
+when I cancel it after MONTHS and DAYS:
 
 | [cancel][][MONTHS][months] | [DAYS][days] | [TRANSFERRED][transferred] ||
 | :------------------------: | :----------: | :-------------------------: |
@@ -58,7 +61,8 @@ For [1][length] year long deposit with [100][initial] initial amount and [2][int
 
 ### [One cannot cancel the deposit before 7th day](- "cannot cancel c:status=ExpectedToFail")
 
-For [1][length] year long deposit with [100][initial] initial amount and [2][interestrate]% interest rate:
+For [1][length] year long deposit with [100][initial] initial amount and [2][interestrate]% interest rate,
+when I cancel it after MONTHS and DAYS:
 
 | [cancel][][MONTHS][months] | [DAYS][days] | [TRANSFERRED][transferred] ||
 | :------------------------: | :----------: | :-------------------------: |

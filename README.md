@@ -56,3 +56,14 @@ Every task and target in the Gruntfile can be run individually (e.g., `grunt jsh
 
 To include components in the build, place them inside of a Usemin block or add them to the `copy:dist` task. This workflow will be streamlined with the release of Usemin 2.0.
 
+## Check for new examples
+
+To check if some of the examples have changed, you can run:
+
+`cd app/_includes/sourcecode/ && ./sources.sh`
+
+And then
+
+`git status`
+
+To see if there are any changes (and commit them if you want to)
