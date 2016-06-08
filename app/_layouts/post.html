@@ -12,16 +12,15 @@ section: blog
       {% endfor %}
     </div>
   </div>
-<article class="post">
-{{ content }}
-</article>
+  <article class="post">
+    {{ content }}
+  </article>
+
+  <section class="comments">
+    {% include content/comments.html %}
+  </section>
 </div>
 
 <div class="content-quick-blog col-sm-3 col-xs-12">
   <h4>Michael Szymczak's blog</h4>
-  <!--<ul>-->
-    <!--<li>foo</li>-->
-    <!--<li>bar</li>-->
-    <!--<li>baz</li>-->
-  <!--</ul>-->
 </div>
