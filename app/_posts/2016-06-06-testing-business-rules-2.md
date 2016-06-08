@@ -67,7 +67,7 @@ In the next posts I will explain it in details, but for the time being let's foc
 If you try to run it
 
 ~~~bash
-git clone --branch v1-instrumented https://github.com/michaelszymczak/blog-testing-business-rules-2
+git clone --branch v2-instrumented https://github.com/michaelszymczak/blog-testing-business-rules-2
 cd blog-testing-business-rules-2
 ./gradlew clean build
 ~~~
@@ -88,7 +88,7 @@ The output of the report:
 
 ## Progress update
 
-It may not be obvious at first sight, but have we achieved a lot so far:
+It may not be obvious at first sight, but so far we have achieved a lot:
 
 - Subject matter expert, QA tester and developer discussed various scenarios and identified business rules of the new functionality.
 - QA tester with the developer's help adapted the specification so that it can be run
