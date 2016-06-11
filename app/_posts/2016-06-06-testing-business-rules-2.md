@@ -60,15 +60,15 @@ By adapt I mean modify it so that the tool of your choice can make use of it. Yo
 As we use Concordion to run our specification, we can instrument a markdown, which is the least verbose way of preparing it.
 
 I have created a sample project that shows how you can do that and make it a part of your continuous integration pipeline
-[https://github.com/michaelszymczak/blog-testing-business-rules-2 - step 1, instrumenting the specification](https://github.com/michaelszymczak/blog-testing-business-rules-2/tree/bfee066df1a21e3343ff6e0e8441a2cde7f10688)
+[https://github.com/michaelszymczak/blog-testing-business-rules-example - step 1, instrumenting the specification](https://github.com/michaelszymczak/blog-testing-business-rules-example/tree/bfee066df1a21e3343ff6e0e8441a2cde7f10688)
 
 In the next posts I will explain it in details, but for the time being let's focus of the outcome, which is a runnable specification verifying business rules.
 
 If you try to run it
 
 ~~~bash
-git clone --branch v2-instrumented https://github.com/michaelszymczak/blog-testing-business-rules-2
-cd blog-testing-business-rules-2
+git clone --branch v2-instrumented https://github.com/michaelszymczak/blog-testing-business-rules-example
+cd blog-testing-business-rules-example
 ./gradlew clean build
 ~~~
 
@@ -77,7 +77,7 @@ the project will be built and the link to the report will be displayed:
 ```
 com.michaelszymczak.blog.testingbusinessrules2.CancellingDepositFixture STANDARD_OUT
 
-    file:///some/path/blog-testing-business-rules-2/build/reports/spec/com/michaelszymczak/blog/testingbusinessrules2/CancellingDeposit.html
+    file:///some/path/blog-testing-business-rules-example/build/reports/spec/com/michaelszymczak/blog/testingbusinessrules2/CancellingDeposit.html
     Successes: 0, Failures: 10
 ```
 
