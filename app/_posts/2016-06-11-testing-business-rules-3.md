@@ -40,9 +40,9 @@ the [CancellingDeposit.md](https://github.com/michaelszymczak/blog-testing-busin
 file, that is the specification of the cancelling deposit functionality.
 It looks like plain English, but has some funny brackets and tables.
 
-{% highlight md linenos=table %}
+```markdown
 {% include sourcecode/testingbusinessrules2/CancellingDeposit.md %}
-{% endhighlight %}
+```
 
 ## Markdown 
 
@@ -52,7 +52,7 @@ However, if you are not familiar with the syntax, you should definitely spend so
 
 Let's jump to line 32 of the file:
 
-```md
+```markdown
 For [1][length] year long deposit # ...
 ```
 
@@ -62,19 +62,19 @@ not to repeat yourself and remove duplication. Whenever you see ```[X][foo]```, 
 ```foo``` is a reference. This reference is then replaced with the real content that can be found elsewhere in the document.
 In our case, the explanation can be found in the line 2.
 
-```md
+```markdown
 [length]: - "#lengthInYears"
 ```
 
 If you didn't use the reference link, you would have to type:
 
-```md
+```markdown
 For [1](- "#lengthInYears") year long deposit # ...
 ```
 
 You can also use implicit link names omitting the content of the second bracket if the reference is the same as the displayed value.
 
-```md
+```markdown
 [foo]: - "#bar"
 
 [foo][foo] 
@@ -89,7 +89,7 @@ Out of curiosity, I have transformed the line above from Markdown to HTML using 
 
 You can conclude that the structure of the markdown link is:
 
-```md
+```markdown
 [WHAT YOU CAN SEE](LINK "TILE")
 ```
 
@@ -110,14 +110,14 @@ In the meantime, I will explain a couple of things that you can find in the spec
  
 Take the first business rule, line 30:
  
-```md
+```markdown
 ### [One receives the same amount as deposited if the deposit cancelled during the first half](- "first half c:status=ExpectedToFail")
 ```
 
 ```###``` denotes the header of the section that follows. The sections spans to the next header and marks the
 logical boundary. All the values and logic is kept within that boundary.
 
-```md
+```markdown
 [One receives the same amount as deposited if the deposit cancelled during the first half](- "first half c:status=ExpectedToFail")
 ```
 
@@ -140,14 +140,14 @@ It also encourages developers to slice the work along business requirements, not
 
 Line 32 and 33
 
-```md
+```markdown
 For [1][length] year long deposit with [100][initial] initial amount and [2][interestrate]% interest rate,
 when I cancel it after MONTHS and DAYS:
 ```
 
 I think you already recognize reference style links. If you scroll the document, you will find:
  
-```md
+```markdown
 [length]: - "#lengthInYears"
 [initial]: - "#initialAmount"
 [interestrate]: - "#interestRate"
@@ -155,7 +155,7 @@ I think you already recognize reference style links. If you scroll the document,
 
 Let's "mentally" inline the references:
  
-```md
+```markdown
 For [1](- "#lengthInYears") year long deposit with [100](- "#initialAmount") initial amount and [2](- "#interestRate")% interest rate,
 when I cancel it after MONTHS and DAYS:
 ``` 
@@ -164,7 +164,7 @@ As we know, although it could be transformed into the HTML document with links, 
   URL have a special meaning. In this case, Concordion interprets them as a [set command](http://concordion.org/instrumenting/java/markdown/#set-command)
   The syntax of the set command is the following.
    
-```md
+```markdown
 [VALUE](- #VARIABLE_NAME)
 # e.g.
 [5](- #lengthInYears)
@@ -183,7 +183,7 @@ interestRate = 2
 
 Let's move to the table below.
 
-```md
+```markdown
 | [cancel][][MONTHS][months] | [DAYS][days] | [TRANSFERRED][transferred] ||
 | :------------------------: | :----------: | :-------------------------: |
 | 0                          | 7            | 100                         |
@@ -194,14 +194,14 @@ Again, this is a Markdown table syntax, but instead of creating links in the hea
 The values in the body of the table are used to replace the values in the header. Thus, the table
  above is similar to (not exactly, but it is used only to visualize the concept):
  
-```md
+```markdown
 [cancel][] [0][months] [7][days] [100][transferred] 
 [cancel][] [6][months] [0][days] [100][transferred]
 ```
 
 As you can see, we have here our old friends, reference style links. Let's find the corresponding notes and expand the first line.
 
-```md
+```markdown
 [cancel](- "#result = cancel(#lengthInYears, #initialAmount, #interestRate, #months, #days)")
 [0](- "#months") 
 [7](- "#days") 
@@ -221,7 +221,7 @@ the command is executed. Don't you worry though - Concordion reorders them so th
 and after that assertions. The fact that I put the execute command ```[cancel][]``` in the front of the header line makes no difference.
 The real order is:
 
-```md
+```markdown
 [0](- "#months") 
 [7](- "#days")
 [cancel](- "#result = cancel(#lengthInYears, #initialAmount, #interestRate, #months, #days)")
@@ -257,9 +257,9 @@ assert result.amountTransferred == 100;
 All good, but one question remained unanswered: where is the definition of the cancel function?
 Well, there is no magic here, we have to [create that code ourselves](https://github.com/michaelszymczak/blog-testing-business-rules-example/blob/v2-instrumented/src/test/java/com/michaelszymczak/blog/testingbusinessrules2/CancellingDepositFixture.java).
 
-{% highlight java linenos=table %}
+```java
 {% include sourcecode/testingbusinessrules2/CancellingDepositFixture.java %}
-{% endhighlight %}
+```
 
 I think the code is self explanatory. I use the cancel method that is invoked by concordion passing all the arguments I provided in the specification.
 Then I return result of type Result that contains amountTransferred field that is used to compare it with the actual value. At the moment,

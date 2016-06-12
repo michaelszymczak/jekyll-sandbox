@@ -19,6 +19,8 @@ Sanbox for playing with jekyll
 
 ## First run
 
+    sudo gem install bundle s3_website
+    bundle
     npm install
     ./bower install
 

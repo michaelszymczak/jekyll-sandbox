@@ -45,8 +45,7 @@ Scenario: A user cancels the deposit prematurely.
 Given the time deposit summary screen with the open time deposit
 When  as a deposit owner I confirm the time deposit cancellation
 Then  the time deposit should be canceled
-And   the money from the canceled time deposit should be 
-      transferred back to the current deposit
+And   the money from the canceled time deposit should be transferred back to the current deposit
 ~~~
 
 I use Cucumber (or an analogous tool, such as Behat), create fixtures and prepare the context in the *Given* step,

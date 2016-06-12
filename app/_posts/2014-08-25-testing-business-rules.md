@@ -16,13 +16,13 @@ If you’ve read my previous posts on Specification by Example, you already know
 
 In the previous post we discussed the scenario that reads:
 
-{% highlight gherkin %}
+```gherkin
 Scenario: A user cancels the deposit prematurely.
 Given the time deposit summary screen with the open time deposit
 When  as a deposit owner I confirm the time deposit cancellation
 Then  the time deposit should be cancelled
 And   the money from the cancelled time deposit should be transferred back to the current deposit
-{% endhighlight %}
+```
 
 Although the scenario above describes the feature so that one can have a general understanding of the expected behaviour, it provides no information about underlying business rules. Now it’s good time to introduce the next kind of business-facing tests I use: Business rules tests using Specification by Example. 
 
@@ -59,14 +59,14 @@ After a conversation with the subject matter expert developers write down severa
 - As we understand, when the time deposit is cancelled during the first half of the deposit period the user loses their interest, but when the time deposit is cancelled during the second half of the deposit period the user loses only the 50% of their interest. I’d like to create some acceptance tests that validate our understanding if you don’t mind:
 </p>
 
-{% highlight gherkin %}
+```gherkin
 Scenario: A user cancels the deposit prematurely.
 Given a year long time deposit
 And the initial amount of 100 pounds
 And the interest rate of 2% a year
 When I cancel the deposit after <MONTHS> months and <DAYS> days
 Then I should have <GBP> pounds transferred to my account
-{% endhighlight %}
+```
 
 <p class="dialogue">
 - I’ll give you some example &lt;MONTHS&gt;, &lt;DAYS&gt; values and ask you how many &lt;GBP&gt; should I expect in each case, OK? First, if I cancel the deposit after 0 MONTHS and 0 DAYS, I’ll have the very same amount, that is 100 pounds, am I right?<br/>

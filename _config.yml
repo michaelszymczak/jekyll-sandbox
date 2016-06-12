@@ -26,10 +26,15 @@ paginate_path: 'page:num'
 
 excerpt_separator: <span class="readmore"/>
 
-# Markdown library
-markdown: redcarpet
+markdown: kramdown
 
-#   extensions: ['fenced_code_blocks', 'smart']
+kramdown:
+  input: GFM
+  hard_wrap: false
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
 
 gems: [jekyll-paginate, jekyll-gist]
 
