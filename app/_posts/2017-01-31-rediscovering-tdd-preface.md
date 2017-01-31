@@ -20,8 +20,8 @@ Being a freshman, surrounded by seasoned developers is a good place to be. It ma
 It's like the last position in a race - can be only better. As some say - try to be the most stupid person in a room, or something similar.
 Well, as long as you try to catch up of course. So I tried. Obviously, I had never worked with such amount of legacy code before.
 By legacy I mean easy to break, hard to develop. Especially for a rookie. At some point it started occurring to me that even if I had been
-as careful as possible, I wouldn't have been able to prove that I had not broken anything. It was partially because I was't clear what was the
-expected behaviour before I started changing the code.
+as careful as possible, I wouldn't have been able to prove that I had not broken anything. It was partially because I was't clear what the
+previous expected behaviour was and how to find an answer for that question.
 </p>
 
 <p>
@@ -30,13 +30,13 @@ I felt bad that I could not deliver more value. I also had to prove to me and th
 I had to act as a software developer, not as an amateur, before my employer and colleagues wise up to the fact that I was a student in disguise,
 pretending to be a real software developer. I had to act quickly. Test driven development, proper design, maintainability, zero-bugs policy, modularity
 were the bare-minimum. If you want to be paid for it, all of the stuff mentioned above is a prerequisite.
-It's like drive licence for a cab driver. This was my idea of the software industry.
+It's like driving licence for a cab driver. This was my idea of the software industry.
 </p>
 
 <p>
 I will probably never forget this day. I was almost a software developer, with 4 to 6 months of experience with a sandwich bough on my way to work and a mug
 of hot tea, perched as always close enough to the keyboard to surely violate some health and safety rules.
-Sipping the tea, still a bit slippy, I started the day as usual.
+Sipping the tea, still a bit sleepy, I started the day as usual.
 Fetch new changes from the central repo.
 Check if all tests still pass and the app still works.
 Check which requirements from the TODO list are not implemented yet.
