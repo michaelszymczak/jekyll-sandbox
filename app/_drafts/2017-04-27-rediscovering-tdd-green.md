@@ -72,23 +72,86 @@ all the time is the quickest, cheapest and most pleasant way of writing software
 originates from the fact that so many mistakes and unjustified 'quick and dirty' design crimes have been already made that everyone is less and less eager to
 say no, take a blame, and fix it. As I said, refactor swiftly right after Red turned to Green and you will be happier, more agile and guilt-free.
 
-## TDD - challenges
+## Preparatory steps
 
-Now, when I (hopefully) convinced you that keeping the pace has its benefits, let's see what can stand in the way.
+TDD is a great tool, but it may not always be the best idea to skip all the preparatory work. I observed that allocating just-enough time for some preparatory tasks makes the implementation
+phase smoother. Just-enough varies, based on the domain, technology, your experience etc. Spending up to 10% on refining requirements and sketching/discussing the design is nothing unusual.
+It obviously does not need to be done in one go, but rather on an ad-hoc basis and subject to stakeholders availability. 
 
-The first that comes to my mind is that we have no idea what to build. In this case, refine the requirement using techniques such as Specification By Example @llink. Draw pictures, talk with stakeholders,
-do whatever it takes to get it. The technique I use most often is paraphrasing and writing some examples. It immediately highlights discrepancies between my understanding and actual requirements.
+### Clarifying requirements
+
+Sometimes we have no idea what to build. In this case, refine the requirement using techniques such as Specification By Example @llink. Draw pictures, talk with stakeholders,
+do whatever it takes to get it. The technique I use most often is paraphrasing and writing some examples. It highlights the discrepancies between my understanding and the actual requirements.
+
+### Spiking a solution
 
 You may also not be clear if you are able to build it - the right library may not exists, vendor's API is poorly documented etc. In this case, you should probably start with spike, hacking your way as you go.
 You will test this solution picking the cheapest and quickest way, which is ofter manual testing or some ad-hoc created test with questionable design. Once you found the solution, ~~you deploy it and go home~~,
-you establish boundaries allowing you to quickly create an end to end test automatically verifying that the solution still works.
-
-After you know what to build and that you can build it using the tools of your choice, the next unknown is the design. The outcome of the previous (optional) step may be one of the following.
+you establish boundaries allowing you to quickly create an end to end test automatically verifying that the solution still works. At this point the outcome may be one of the following.
 
  - Case A - I didn't even bother to do a spike as I am already confident that technology is not a problem.
  - Case B - There were one or two places that I wasn't confident about, but I narrowed them down and the rest is not a problem, technology-wise. The good example is that there was some undocumented part of API that
   required you to pass a custom header in order to get the response. Had you known that, you wouldn't have bothered doing a spike.
- - Case C - The whole solution is still a mystery for you. You are afraid to change anything as it may turn a working solution into useless one.
+ - Case C - The whole solution is still a mystery for you. You are afraid to change anything as it may turn a working solution into a useless one.
+ 
+After you know what to build and that you can build it using the tools of your choice, the next one is the design and implementation. In case A, when the technology does not pose any challenge for you,
+there is nothing you have to do before the design and implementation phase. In case B and C you may want to reuse some or all of the existing code, especially in case C when you risk not being able to reproduce the
+expected behaviour if you started from scratch again. You can, instead, apply series of refactoring steps to improve the design and create more tests as you go. In case B, you can isolate tricky parts, create tests for them
+and re-use in the new design.
+ 
+### Sketching and modeling 
+ 
+If the domain or the problem itself is non-trivial, it may be advisable to think about the design beforehand. There are various techniques you can apply, such as @link https://en.wikipedia.org/wiki/Class-responsibility-collaboration_card
+or https://en.wikipedia.org/wiki/Domain-driven_design . If you are confident that TDD and its feedback loop alone is sufficient for the problem in hand and you have proven track of implementing clean solutions
+using TDD, you most probably know how just-enough design should look like in this context.
+ 
+### Design and implementation phase 
+
+As I mentioned earlier, in this blog I am implementing the diamond-kata. As many other katas, it is a perfect example of  Case A problem, i.e. technology side is not an issue.
+The main focus is on design and implementation phase. I hope that I convinced you that when applying TDD, it is important to keep the pace. Before we move on and see my implementation,
+it is important that you try it on your own, especially when you are already familiar with TDD. I am addressing some of the pain-points of the most popular existing TDD approaches, so it
+would be nice if you experienced them on your own before I show you my approach.
+
+
+## Diamond-kata w/ TDD
+
+Given a letter, print a diamond starting with ‘A’ with the supplied letter at the widest point.
+
+    
+<pre>
+#  Example: diamond 'A' prints
+      A
+      
+#  Example: diamond 'C' prints
+      A
+     B B
+    C   C
+     B B
+      A
+</pre>
+
+
+My main focus is to maintain a certain pace, moving from Red to Green to Refactor smoothly and without any risky leaps into unknown
+that would question the correctness of the implementation. In other words, the correctness of the solution is achieved by starting with the correct solution
+for the sub-problem and applying a series of trivial transformations (that you can easily explain and reason about) that end when the solution for the whole problem is found.
+
+The first approach I tried was the Classicist TDD. When you see some examples of Classicist TDD, the smooth transitions are achieved by doing it bottom-up - small chunks are implemented first
+and the final solution bottoms up. There is a catch though - I want the approach to be outside-in, so that we are sure that we solve the right problem. It means that we should start with the test that is as close to the original requirement as possible.
+In that sense, it is closer to what some describe as BDD @link, but for me the **outside-in approach is the most cost-effective one, as existence of each piece of logic is justified by some requirement**.
+If each piece of logic is justified by requirements, there is no un-justified code, that costs time and money, bringing no value. Compare it to the bottom-up approach, when we may end up creating
+some unnecessary code that, in the best case, will be thrown away or, in the worst case, we will try to keep 'just for case' or use somewhere because we can't admit that we wasted time writing it in a first place.
+ 
+Quick pace and outside-in approach are two benefits of the Mockist TDD @link . You may think that I should simply use this approach then. There is another catch though. I believe that mocks should be used
+as a last resort and excessive use of mocks is an anti-pattern. By Mocks I mean ```Mockito.when(query.executeQuery()).thenReturn(rs);``` and alike.
+If you are one of the Mockist TDD practitioners and wonder why sometimes when you refactor the production code many tests turn red, even though the solution
+ is still correct; or worse even, when while refactoring you introduced a bug but all of them are still green - you know what I mean. It is so common, that you may even have convinced yourself that it is OK to
+refactor on Red, and this gambling is a price that you are willing to pay for the sake of a better design. There is a reason why mock-based tests panic or stay calm when the shouldn't though - they are not real,
+ they only pretend that they know what to do. **A mock is like an incompetent teacher that fails a student if their answer differs from the one found in the answer-key, despite of still being correct.**
+As in school, your strategy may be to obey the teacher (tests) and not question any answer (interaction) or become an outlaw that ignores the teacher (tests) and refactors on Red.
+ 
+To sum up, outside-in approach, swift transition from Red to Green to Refactor and Mocks as a last resort. Is it possible?
+
+TODO: Discuss the 'incremental tests' approach 
 
 
 ```groovy
