@@ -25,7 +25,7 @@ I want to show you my approach commit by commit, highlighting and commenting int
 
 The problem is the following.
 
-Given a letter, print a diamond starting with ‘A’ with the supplied letter at the widest point.
+Given a letter, print a diamond starting with 'A' with the supplied letter at the widest point.
 
     
 <pre>
@@ -113,23 +113,7 @@ it is important that you try it on your own, especially when you are already fam
 would be nice if you experienced them on your own before I show you my approach.
 
 
-## Diamond-kata w/ TDD
-
-Given a letter, print a diamond starting with ‘A’ with the supplied letter at the widest point.
-
-    
-<pre>
-#  Example: diamond 'A' prints
-      A
-      
-#  Example: diamond 'C' prints
-      A
-     B B
-    C   C
-     B B
-      A
-</pre>
-
+## TDD - constraints
 
 My main focus is to maintain a certain pace, moving from Red to Green to Refactor smoothly and without any risky leaps into unknown
 that would question the correctness of the implementation. In other words, the correctness of the solution is achieved by starting with the correct solution
@@ -142,20 +126,123 @@ If each piece of logic is justified by requirements, there is no un-justified co
 some unnecessary code that, in the best case, will be thrown away or, in the worst case, we will try to keep 'just for case' or use somewhere because we can't admit that we wasted time writing it in a first place.
  
 Quick pace and outside-in approach are two benefits of the Mockist TDD @link . You may think that I should simply use this approach then. There is another catch though. I believe that mocks should be used
-as a last resort and excessive use of mocks is an anti-pattern. By Mocks I mean ```Mockito.when(query.executeQuery()).thenReturn(rs);``` and alike.
-If you are one of the Mockist TDD practitioners and wonder why sometimes when you refactor the production code many tests turn red, even though the solution
+as a last resort and excessive use of mocks is an anti-pattern. By Mocks I mean mocked subset of class API, such as ```Mockito.when(query.executeQuery()).thenReturn(rs);```.
+Why this is a bad idea deserves a separate blog post. If you are one of the Mockist TDD practitioners and wonder why sometimes when you refactor the production code many tests turn red, even though the solution
  is still correct; or worse even, when while refactoring you introduced a bug but all of them are still green - you know what I mean. It is so common, that you may even have convinced yourself that it is OK to
 refactor on Red, and this gambling is a price that you are willing to pay for the sake of a better design. There is a reason why mock-based tests panic or stay calm when the shouldn't though - they are not real,
- they only pretend that they know what to do. **A mock is like an incompetent teacher that fails a student if their answer differs from the one found in the answer-key, despite of still being correct.**
-As in school, your strategy may be to obey the teacher (tests) and not question any answer (interaction) or become an outlaw that ignores the teacher (tests) and refactors on Red.
- 
-To sum up, outside-in approach, swift transition from Red to Green to Refactor and Mocks as a last resort. Is it possible?
+ they only pretend that they know what to do. **A mock is like an incompetent teacher that fails a student if their answer differs from the one found in the answer-key, despite of being correct.**
 
-TODO: Discuss the 'incremental tests' approach 
+## Maybe test recycling?
+
+To sum up, outside-in approach, swift transition from Red to Green to Refactor and Mocks as a last resort. Is it even possible? It seems that not without a bit of creativity.
+The first approach is the one presented by [@sebrose](https://twitter.com/sebrose) in the blog post [Recycling tests in TDD](http://claysnow.co.uk/recycling-tests-in-tdd/) .
+It is a quick blog post, and worth reading simply to see if you like it. 
+ 
+Although I find the approach with incremental test refining interesting, if the same could be
+achieved while still keeping old tests, I would definitely prefer it.
+If you have ever climbed in your life (I haven't), you probably remember
+the checkpoints you lock to climbing higher and higher (if you are still alive, you probably do).
+When you have made mistake, and either want to pick a different root, or you simply have fallen,
+this checkpoint guarantees that you don't fall any lower than necessary. It is also
+important to be locked to at least one checkpoint close to you, at any given time.
+Otherwise you risk falling long distance, and effectively dying.
+
+Let's now look at the test rewriting approach. A final, correct implementation is our peak we climb.
+Any intermediate solution satisfying more requirements is an equivalent of being higher.
+Being higher, however, does not necessarily mean being closer to the final solution.
+Sometimes we encounter an obstacle preventing us from progressing and we
+have to take a step back to find another route.
+
+Let's imagine what happens, when we need to retreat, take a few steps back and take another route.
+It's a quite common case, especially when we design an algorithm for the first time and we do it
+by test driving it.
+
+In the traditional approach, when you keep previous tests and always run all of them, your safety check
+is your previous test that you wrote. Even if it turned out that your last 5 steps were in the wrong direction,
+you remove the last 5 tests, one by one, letting yourself to gracefully reach the place that enables you to take
+the another route. You cannot fall lower than you planned.
+
+Conversely, when you keep rewriting one and the same test, you climb higher and higher, with your last
+checkpoint being also your only one. If it turned out, that our last 5 steps were in the wrong direction,
+you simply, well, jump. Which is an equivalent of abandoning the idea and starting from scratch.
+You have no previous checkpoint, let alone last five. 
+You can always use version control, if you are lucky to have a habit of committing often, but
+this option is easily available only right after you finished the last step. Imagine that you have
+to improve the algorithm you worked on a month or a year ago and you realize that some aspects
+of the solution are not fit for purpose any more - good luck with browsing commit history
+and trying to revert some changes. You jump.
+
+## My approach
+
+I have just described the dark side of the test recycling and the reason why I normally do not use this approach. Let's come up with something safer.
+If you look at the reason why someone even considered taking the rewriting approach, they are the following.
+
+- going straight to the final solution is too risky with too many intermediate steps skipped, but
+- requirements expressed by the intermediary steps contradict the final solution, i.e. all tests cannot be green at the same time
+
+If we manage to fix the latter, we will be able to keep all the tests and solve the problem incrementally. Easier said then done, but the very blog
+post you are reading was created to help you to achieve exactly that. Keep reading.
+
+
+## Diamond kata - my way of TDD
+
+Just to refresh the memory, the requirement is the following.
+
+Given a letter, print a diamond starting with 'A' with the supplied letter at the widest point.
+    
+<pre>
+#  Example: diamond 'A' prints
+      A
+
+#  Example: diamond 'B' prints
+      A
+     B B
+      A
+
+#  Example: diamond 'C' prints
+      A
+     B B
+    C   C
+     B B
+      A
+</pre>
+
+As you remember, we do outside-in TDD, so the first test must be derived from the requirements, ideally as-is.
+
+To create easy to maintain, flexible and readable tests I use [Spock framework](http://spockframework.org/)
 
 
 ```groovy
+package com.michaelszymczak.diamond
+
+import spock.lang.Specification
+
+class DiamondAcceptanceTest extends Specification {
+
+  def "contains one letter if it is the first letter"() {
+    expect:
+    Diamond.of('A' as char).rendered() == "A"
+  }
+}
 ```
+
+I run all the tests (only one at the moment) - it's Red,  so wee need to introduce just enough production code to make it pass, and do it quickly!
+
+```java
+package com.michaelszymczak.diamond;
+
+public class Diamond {
+  public static Diamond of(char letter) {
+    return new Diamond();
+  }
+
+  public String rendered() {
+    return "A";
+  }
+}
+```
+
+You can see the corresponding commit [here](https://github.com/michaelszymczak/blog-support/commit/bfb5ecf3eb5711ca6baf7a58eacac996c3dfc868)
 
 <p>
 </p>
