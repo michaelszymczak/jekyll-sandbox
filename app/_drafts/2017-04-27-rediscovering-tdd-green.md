@@ -184,7 +184,7 @@ If we manage to fix the latter, we will be able to keep all the tests and solve 
 post you are reading was created to help you to achieve exactly that. Keep reading.
 
 
-## Diamond kata - my way of TDD
+### Diamond kata - my way of TDD
 
 Just to refresh the memory, the requirement is the following.
 
@@ -209,7 +209,7 @@ Given a letter, print a diamond starting with 'A' with the supplied letter at th
 
 As you remember, we do outside-in TDD, so the first test must be derived from the requirements, ideally as-is.
 
-To create easy to maintain, flexible and readable tests I use [Spock framework](http://spockframework.org/)
+To create easy to maintain, flexible and readable tests I use [Spock framework](http://spockframework.org/) and write them in [Groovy](http://groovy-lang.org/)
 
 
 ```groovy
@@ -228,6 +228,9 @@ class DiamondAcceptanceTest extends Specification {
 
 I run all the tests (only one at the moment) - it's Red,  so wee need to introduce just enough production code to make it pass, and do it quickly!
 
+For back-end production code, I usually use Java 8, as in some cases performance predictability is more important than flexibility. It is also much easier achieve a productivity boost and to convince
+a company or a team to use Spock with Groovy if it does not require changing the production stack.
+
 ```java
 package com.michaelszymczak.diamond;
 
@@ -242,7 +245,93 @@ public class Diamond {
 }
 ```
 
-You can see the corresponding commit [here](https://github.com/michaelszymczak/blog-support/commit/bfb5ecf3eb5711ca6baf7a58eacac996c3dfc868)
+Run the test. It's Green now. Any refactoring? Not now. Commit!
+
+The corresponding revision can be found [here](https://github.com/michaelszymczak/blog-support/commit/bfb5ecf3eb5711ca6baf7a58eacac996c3dfc868)
+
+"It's cheating!" - one may say - "There is no logic, just some hardcoded value!". It's true, and it is intentional. If we are able to satisfy all
+the requirements quickly and easily, the whole codebase benefits from it. We know that there are new requirements coming, that will make this naive solution insufficient,
+ but NOW this is all we have to do. Let me repeat it - we should not write any code unless necessary. Nobody pays us for lines of code we write (I hope), but for solving problems in the most quick and maintainable way.
+ As this test is an end to end one, at some point it may evolve into something similar to [Walking Skeleton](http://wiki.c2.com/?WalkingSkeleton).
+ 
+Let's do the next cycle.
+
+```groovy
+class DiamondAcceptanceTest extends Specification {
+
+  def "contains one letter if it is the first letter"() {
+    expect:
+    Diamond.of('A' as char).rendered() == "A"
+  }
+
+  def "creates diamond shape if more than one letter"() {
+    expect:
+    Diamond.of('B' as char).rendered() == " A " + "\n" +
+                                          "B B" + "\n" +
+                                          " A "
+
+  }
+}
+```
+
+I took another example from the requirements and created the next test. When I run both of them, the outcome is Red. Let's quickly write some production code to make it Green again.
+
+```java
+public class Diamond {
+
+  private char letter;
+
+  public static Diamond of(char letter) {
+    return new Diamond(letter);
+  }
+
+  private Diamond(char letter) {
+    this.letter = letter;
+  }
+
+  public String rendered() {
+    return letter == 'A' ? "A" : " A \nB B\n A ";
+  }
+}
+```
+
+I split the execution path based on the input letter. This was the quickest way that came to my mind. When I run the tests, they are Green again. The corresponding revision can be found [here](https://github.com/michaelszymczak/blog-support/commit/8df0bc226c04bd34b968cff4c37676670ab0b929)
+
+As we are on Green, we can do some Refactoring. I decided to change the input parameter to enum, as my understanding is that we should not support unknown characters. I basically whitelist the allowed inputs.
+
+```java
+package com.michaelszymczak.diamond;
+
+public enum Letter {
+  A, B
+}
+```
+
+```java
+class DiamondAcceptanceTest extends Specification {
+
+  def "contains one letter if it is the first letter"() {
+    expect:
+    Diamond.of(Letter.A).rendered() == "A"
+  }
+
+  def "creates diamond shape if more than one letter"() {
+    expect:
+    Diamond.of(Letter.B).rendered() == "" +
+            " A " + "\n" +
+            "B B" + "\n" +
+            " A "
+  }
+}
+```
+
+You can see the full commit [here](https://github.com/michaelszymczak/blog-support/commit/0d65319b95ed24d9d62f38d9a91776acc71423cd).
+
+### Decision time
+
+It's time to introduce something more sophisticated, otherwise our solution would have almost as many ifs as there are letters in the alphabet. As this is an algorithmic kata,
+we could use the [Transformation Priority Premise](https://8thlight.com/blog/uncle-bob/2013/05/27/TheTransformationPriorityPremise.html) to guide us when writing the tests.
+The approach I want to show you is, in my opinion, slightly simpler to apply, and, on top of that, it can be used in any context, not necessarily an algorithmic one.
 
 <p>
 </p>
