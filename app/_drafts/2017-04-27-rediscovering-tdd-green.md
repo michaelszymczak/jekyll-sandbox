@@ -172,9 +172,7 @@ to improve the algorithm you worked on a month or a year ago and you realize tha
 of the solution are not fit for purpose any more - good luck with browsing commit history
 and trying to revert some changes. You jump.
 
-## My approach
-
-I have just described the dark side of the test recycling and the reason why I normally do not use this approach. Let's come up with something safer.
+After describing the dark side of the test recycling and the reason why I normally do not use this approach, let's come up with something safer.
 If you look at the reason why someone even considered taking the rewriting approach, they are the following.
 
 - going straight to the final solution is too risky with too many intermediate steps skipped, but
@@ -183,8 +181,7 @@ If you look at the reason why someone even considered taking the rewriting appro
 If we manage to fix the latter, we will be able to keep all the tests and solve the problem incrementally. Easier said then done, but the very blog
 post you are reading was created to help you to achieve exactly that. Keep reading.
 
-
-### Diamond kata - my way of TDD
+# TDD - my way
 
 Just to refresh the memory, the requirement is the following.
 
@@ -327,11 +324,30 @@ class DiamondAcceptanceTest extends Specification {
 
 You can see the full commit [here](https://github.com/michaelszymczak/blog-support/commit/0d65319b95ed24d9d62f38d9a91776acc71423cd).
 
-### Decision time
+### Overcoming dead-end
 
 It's time to introduce something more sophisticated, otherwise our solution would have almost as many ifs as there are letters in the alphabet. As this is an algorithmic kata,
-we could use the [Transformation Priority Premise](https://8thlight.com/blog/uncle-bob/2013/05/27/TheTransformationPriorityPremise.html) to guide us when writing the tests.
+we could use the [Transformation Priority Premise](https://8thlight.com/blog/uncle-bob/2013/05/27/TheTransformationPriorityPremise.html) to guide us when writing the tests (try it, it's an excellent exercise).
 The approach I want to show you is, in my opinion, slightly simpler to apply, and, on top of that, it can be used in any context, not necessarily an algorithmic one.
+
+### Staying on Green
+
+To practice TDD, one must be focused and disciplined. For example, there is one valid case when existing Green test can become Red. It is when we introduced a bug.
+If any of the Green tests turns Red, you revert the last change to be again on Green and look for another way to solve the problem.
+Another rule is that there can be only one Red test at a time - one that we have just written to express new requirement we are about to implement. It's quite strict, I know, but it is for a reason.
+Being on Green gives you much more feedback than being on Red. If you think about a software as a complex function transforming some input to some output, there is an infinite number of combinations 
+in which you can design it. If your application is deterministic, for each input there is one correct output and infinite number of incorrect outputs. If you add 1 to 0, there is only one correct answer, which is 1.
+There are many incorrect answers, starting from minus infinity and ending at plus infinity, excluding number 1. Being on Red means being somewhere between minus infinity and plus infinity, but not 1. Being on Green means
+being on 1. If you compare those two sets, you can easily notice that Green gives you precise answer, whereas Red gives you almost no answer whatsoever. If you stay on Green, you know exactly where you are. If you are on Red,
+you have no idea if you are close to the actual requirements, or you are as far as you could be. The only useful thing about Red is the moment when it becomes one. On it's own, being on Red gives you nothing.
+The next useful moment is when it turns Green again. That is why xUnit test frameworks do not display anything when they are on Green and can be quite verbose when they are on Red - it is because Red on it's own gives you nothing.
+Conversely, Green on its own gives you a lot. You know exactly where you are and, regardless of what you do (i.e. refactor), you stays exactly there. Green saves your time, Red wastes it. Red is like a lava.
+Once you touch it, you need quickly jump on the grass again.
+
+If you want to be much more productive when practicing TDD, try to be on Green almost all the time. Avoid debugging, reasoning about failed assertions and, at all cost, avoid flaky tests
+(I was a bit disappointed when I [read](https://testing.googleblog.com/2017/04/where-do-our-flaky-tests-come-from.html), that at Google around 1.5% of their tests are flaky over the course of a week.
+In the current project I work on this number is 0%, out of couple of thousands, and this should be you target as well.) 
+
 
 <p>
 </p>
