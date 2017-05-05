@@ -132,7 +132,7 @@ Why this is a bad idea deserves a separate blog post. If you are one of the Mock
 refactor on Red, and this gambling is a price that you are willing to pay for the sake of a better design. There is a reason why mock-based tests panic or stay calm when the shouldn't though - they are not real,
  they only pretend that they know what to do. **A mock is like an incompetent teacher that fails a student if their answer differs from the one found in the answer-key, despite of being correct.**
 
-## Maybe test recycling?
+## Test recycling for the rescue?
 
 To sum up, outside-in approach, swift transition from Red to Green to Refactor and Mocks as a last resort. Is it even possible? It seems that not without a bit of creativity.
 The first approach is the one presented by [@sebrose](https://twitter.com/sebrose) in the blog post [Recycling tests in TDD](http://claysnow.co.uk/recycling-tests-in-tdd/) .
@@ -322,15 +322,28 @@ class DiamondAcceptanceTest extends Specification {
 }
 ```
 
+```java
+public class Diamond {
+
+  private Letter letter;
+
+  public static Diamond of(Letter letter) {
+    return new Diamond(letter);
+  }
+
+  private Diamond(Letter letter) {
+    this.letter = letter;
+  }
+
+  public String rendered() {
+    return letter == Letter.A ? "A" : " A \nB B\n A ";
+  }
+}
+```
+
 You can see the full commit [here](https://github.com/michaelszymczak/blog-support/commit/0d65319b95ed24d9d62f38d9a91776acc71423cd).
 
-### Overcoming dead-end
-
-It's time to introduce something more sophisticated, otherwise our solution would have almost as many ifs as there are letters in the alphabet. As this is an algorithmic kata,
-we could use the [Transformation Priority Premise](https://8thlight.com/blog/uncle-bob/2013/05/27/TheTransformationPriorityPremise.html) to guide us when writing the tests (try it, it's an excellent exercise).
-The approach I want to show you is, in my opinion, slightly simpler to apply, and, on top of that, it can be used in any context, not necessarily an algorithmic one.
-
-### Staying on Green
+### Once you go Green, you never go back
 
 To practice TDD, one must be focused and disciplined. For example, there is one valid case when existing Green test can become Red. It is when we introduced a bug.
 If any of the Green tests turns Red, you revert the last change to be again on Green and look for another way to solve the problem.
@@ -348,6 +361,295 @@ If you want to be much more productive when practicing TDD, try to be on Green a
 (I was a bit disappointed when I [read](https://testing.googleblog.com/2017/04/where-do-our-flaky-tests-come-from.html), that at Google around 1.5% of their tests are flaky over the course of a week.
 In the current project I work on this number is 0%, out of couple of thousands, and this should be you target as well.) 
 
+### Overcoming dead-end
+
+It's time to introduce something more sophisticated, otherwise our solution would have almost as many ifs as there are letters in the alphabet. As this is an algorithmic kata,
+we could use the [Transformation Priority Premise](https://8thlight.com/blog/uncle-bob/2013/05/27/TheTransformationPriorityPremise.html) to guide us when writing the tests (try it, it's an excellent exercise).
+The approach I want to show you is, in my opinion, slightly simpler to apply, and, on top of that, it can be used in any context, not necessarily an algorithmic one.
+
+As I mentioned earlier, all the tests I have already wrote should stay Green and acceptance tests are no exception. I can't simply add more and more if statements, so now is the right time to think about the overall design.
+It's clear that in order to progress, some refactoring is necessary. I notices that I struggled, because the Diamond class has too many responsibilities. The responsibilities are hidden behind the simple output string,
+but if you look closely at you thought process when you reason about the solution, you can discover, that you:
+
+- make sure that the right letters are present
+- calculate the positions of each letter
+- format the output
+
+The current design is not future-proof, because it simply ignores the above mentioned concerns. The best way to make them explicit is to delegate them to separate classes. 
+In Mockist TDD, the outside-in approach leads to the delegation of some responsibility to the classes that are yet to be created and using some Mocks instead to pretend that this part of functionality
+is already done. This way our existing tests are still Green. However, they couple our tests with the implementation and make the later refactoring on Green impossible, as the tests expecting certain interaction fail
+when we change the way we interact with other classes. The only way I can accept interaction based testing is when this is an intermediate step helping to shape the desired design
+and the Mocks are eventually replaced with the real objects, not to hinder the future refactoring. Instead of using Mocks, I will sketch the desired design.
+
+```
+// pseudocode
+public class Diamond {
+  // ...
+  public String rendered() {
+    return if (letter == A) then
+      board with  A on (0,0)
+    else
+      board with     A on (0,1)
+              B on (1,0) , B on (1,2)
+                    A on (2,1)
+  }
+}
+```
+
+To dream about being able to compile it from Java, we must be slightly more verbose. After rewriting it in Java the desired (and not yet existing) design is the following. 
+  
+```java
+public class Diamond {
+  // ...
+  public String rendered() {
+    return letter == A ? new Board(new PositionedLetter(ofYX(0,0), A)).toString()
+            : new Board(
+            new PositionedLetter(ofYX(0,1), A),
+            new PositionedLetter(ofYX(1,0), B), new PositionedLetter(ofYX(1,2), B),
+            new PositionedLetter(ofYX(2,1), A)
+    ).toString();
+  }
+}
+```
+
+The design above would enable Diamond to delegate one of the responsibilities, namely formatting the output, to the newly created Board class. Both deciding which letters should be used and the layout of the letters
+are still responsibilities of the Diamond class. However, because we don't have Board class yet, in order to keep all the tests Green we can't use this design yet.
+
+The difference between the current and desired design should be small, and you should be confident that it can be easily achieved, ideally in one TDD cycle.
+The one presented above is slightly to big to achieve it in one go, so I will split it into more steps. Let's achieve something smaller first. My achievable desired design is the following.
+
+```java
+public class Diamond {
+  // ...
+  public String rendered() {
+    return letter == A ? 
+      new Board(new PositionedLetter(ofYX(0,0), A)).toString() :
+      " A \nB B\n A ";
+  }
+}
+```
+
+However, the current implementation of the Diamond's rendered method is still the following.
+
+
+```java
+public class Diamond {
+
+  // ...
+
+  public String rendered() {
+    return letter == Letter.A ? "A" : " A \nB B\n A ";
+  }
+}
+```
+
+Before making any changes, let's run all the tests - Everything Green. Now let's write the first test for the Board class. 
+
+```groovy
+package com.michaelszymczak.diamond
+
+import spock.lang.Specification
+
+class BoardShould extends Specification {
+
+  def "should print a symbol"() {
+    expect: new Board([new PositionedLetter(Coordinates.ofYX(0,0),Letter.B)]).toString() == "B"
+  }
+}
+```
+
+Red, as classes do not exist yet. After creating the tiny types of PositionedLetter and Coordinates, and implementing the Board::toString method that ignores coordinates and simply returns given letter, we are Green again.
+It's time for the refactoring step, i.e. making use of the Board class in the Diamond class.  
+
+```java
+public class Diamond {
+  // ...
+  public String rendered() {
+    return letter == A ? 
+      new Board(new PositionedLetter(ofYX(0,0), A)).toString() :
+      " A \nB B\n A ";
+  }
+}
+```
+
+We are still Green, as Board correctly handles the case of one letter. It's time to finish what we started. The second case with letter B requires Board to be able to render more than one letter and respect the positions of them.
+Same as previously, first we have to write a failing test for the Board class and make it quickly pass. After two cycles of Red-Green-Refactoring for the Board class, we have:
+
+```groovy
+package com.michaelszymczak.diamond
+
+import spock.lang.Specification
+
+class BoardShould extends Specification {
+
+  def "should print a symbol"() {
+    expect: new Board([new PositionedLetter(Coordinates.ofYX(0,0),Letter.B)]).toString() == "B"
+  }
+
+  def "should print symbols respecting their positions"() {
+    expect:
+    new Board([
+            new PositionedLetter(Coordinates.ofYX(0,0),Letter.A),
+            new PositionedLetter(Coordinates.ofYX(0,1),Letter.B),
+            new PositionedLetter(Coordinates.ofYX(1,0),Letter.C),
+            new PositionedLetter(Coordinates.ofYX(1,1),Letter.D),
+    ]).toString() == shapeOf("""
+AB
+CD
+""")
+  }
+
+  def "should fill gaps with defined symbol "() {
+    expect:
+    new Board("_", [
+            new PositionedLetter(Coordinates.ofYX(0,2),Letter.A),
+            new PositionedLetter(Coordinates.ofYX(1,1),Letter.B),
+            new PositionedLetter(Coordinates.ofYX(1,3),Letter.B),
+            new PositionedLetter(Coordinates.ofYX(2,0),Letter.C),
+            new PositionedLetter(Coordinates.ofYX(2,4),Letter.C),
+            new PositionedLetter(Coordinates.ofYX(3,1),Letter.B),
+            new PositionedLetter(Coordinates.ofYX(3,3),Letter.B),
+            new PositionedLetter(Coordinates.ofYX(4,2),Letter.A),
+    ]).toString() == shapeOf("""
+__A__
+_B_B_
+C___C
+_B_B_
+__A__
+""")
+  }
+  private static String shapeOf(String shape) {
+    shape.replaceAll("^\n", "").replaceAll("\n\$", "")
+  }
+}
+```
+
+```java
+package com.michaelszymczak.diamond;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
+
+public class Board {
+
+  private final PositionedLetter[][] board;
+  private final String emptyCell;
+
+  public Board(PositionedLetter... cells) {
+    this(" ", asList(cells));
+  }
+
+  public Board(Collection<PositionedLetter> cells) {
+    this(" ", cells);
+  }
+
+  public Board(String emptyCell, Collection<PositionedLetter> cells) {
+    this.emptyCell = emptyCell;
+    this.board = boardWith(cells);
+  }
+
+
+  private static PositionedLetter[][] boardWith(Collection<PositionedLetter> cells) {
+    int maxCellPosition = cells.stream()
+            .mapToInt(PositionedLetter::maxXorY)
+            .max()
+            .orElse(0);
+    PositionedLetter[][] board = new PositionedLetter[maxCellPosition+1][maxCellPosition+1];
+    cells.forEach(cell -> board[cell.getY()][cell.getX()] = cell);
+
+    return board;
+  }
+
+  @Override
+  public String toString() {
+    return Arrays.stream(board)
+            .map(this::rendered)
+            .collect(Collectors.joining("\n"));
+  }
+
+  private String rendered(PositionedLetter[] row) {
+    return Arrays.stream(row)
+            .map(cell -> (cell != null) ? cell.letterAsString() : emptyCell)
+            .collect(Collectors.joining());
+  }
+
+}
+```
+
+It's time for Diamond to delegate rendering for all the cases to the Board class.
+ 
+```java
+package com.michaelszymczak.diamond;
+
+import static com.michaelszymczak.diamond.Coordinates.ofYX;
+import static com.michaelszymczak.diamond.Letter.A;
+import static com.michaelszymczak.diamond.Letter.B;
+
+public class Diamond {
+
+  private Letter letter;
+
+  public static Diamond of(Letter letter) {
+    return new Diamond(letter);
+  }
+
+  private Diamond(Letter letter) {
+    this.letter = letter;
+  }
+
+  public String rendered() {
+    return letter == A ? new Board(new PositionedLetter(ofYX(0,0), A)).toString()
+            : new Board(
+            new PositionedLetter(ofYX(0,1), A),
+            new PositionedLetter(ofYX(1,0), B), new PositionedLetter(ofYX(1,2), B),
+            new PositionedLetter(ofYX(2,1), A)
+    ).toString();
+  }
+}
+```
+
+Now it's good time to [commit the changes](https://github.com/michaelszymczak/blog-support/commit/0906c04c30152a8a6a5b9e041e61b3644f84c509).
+
+## Big and small cycles
+
+All our tests are still Green, and we added a few more of them. There was no time when we turned Red for the reason other that adding new test.
+We were also able to keep the pace and smoothly transition from Red to Green couple of times. The interesting observation was that in TDD there are big and small cycles.
+Although we have done a couple of small cycles of Red Green Refactoring when we were implementing Board class (I showed you just the end result for brevity), it was part of a bigger cycle,
+that I would classify as a pre-refactoring step for a Diamond class.
+
+
+```
+# My way of TDD, capital letters indicate big cycle, lowercase letter - the small one
+RED -> GREEN -> (red->green->refactor) -> REFACTOR
+```
+
+In the light of big and small cycles, my approach differs from bottom-up clasitist TDD in a sense that small Red-Green-Refactor cycles are part of a Refactor phase in a bigger cycle, whereas in bottom-up
+classicist TDD small Red-Gree-Refactor cycles happens before the Red phase of a bigger cycle, i.e. small building blocks are developer first, then higher-level functionality is specified (Red) and implemented
+using the already built small components (Green).
+
+```
+# Bottom-up classicist TDD 
+(red->green->refactor) -> RED -> GREEN -> REFACTOR
+```
+
+It also differs from the way how some developers do BDD, when the acceptance test is pending/failing/not implemented until the building blocks are ready. In this case Red phase of a bigger cycle happens first,
+then there is a small Red-Green-Refactor cycle, that eventually moves big cycle into a Green phase.
+
+```
+# Some BDD practitioner
+RED -> (red->green->refactor) -> GREEN -> REFACTOR
+```
+
+Conceptually, the design evolution of my outside-in approach has a lot in common with Mockist TDD. However, as I try to avoid mocking, I can't call myself a Mockist TDD practitioner.
+ 
+
+```
+# Some Mockists TDD practitioners 
+RED -> GREEN -> (red->green->refactor) -> REFACT.. oh sh**t, 30 failing tests
+```
 
 <p>
 </p>
