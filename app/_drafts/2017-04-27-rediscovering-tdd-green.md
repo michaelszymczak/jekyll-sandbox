@@ -623,7 +623,7 @@ that I would classify as a pre-refactoring step for a Diamond class.
 
 ```
 # My way of TDD, capital letters indicate big cycle, lowercase letter - the small one
-RED -> GREEN -> (red->green->refactor) -> REFACTOR
+RED -> GREEN -> (red->green->refactor) REFACTOR
 ```
 
 In the light of big and small cycles, my approach differs from bottom-up clasitist TDD in a sense that small Red-Green-Refactor cycles are part of a Refactor phase in a bigger cycle, whereas in bottom-up
@@ -632,7 +632,7 @@ using the already built small components (Green).
 
 ```
 # Bottom-up classicist TDD 
-(red->green->refactor) -> RED -> GREEN -> REFACTOR
+(red->green->refactor) RED -> GREEN -> REFACTOR
 ```
 
 It also differs from the way how some developers do BDD, when the acceptance test is pending/failing/not implemented until the building blocks are ready. In this case Red phase of a bigger cycle happens first,
@@ -640,16 +640,230 @@ then there is a small Red-Green-Refactor cycle, that eventually moves big cycle 
 
 ```
 # Some BDD practitioner
-RED -> (red->green->refactor) -> GREEN -> REFACTOR
+RED (red->green->refactor) -> GREEN -> REFACTOR
 ```
 
-Conceptually, the design evolution of my outside-in approach has a lot in common with Mockist TDD. However, as I try to avoid mocking, I can't call myself a Mockist TDD practitioner.
+Mockist TDD practitioners do one cycle after another. Once the top-level class is finished and dependencies mocked, they go level down and repeat the process. It like searching the graph-type approach.
+They can Mock dependencies immediately, or they can change their mind later and extract already existing logic into a separate class that they can replace with a Mock and use instead of the actual logic.
+The tend to think about the design quite early and try to be right the first time. The have to, as refactoring with all those Mocks around is far less pleasant than in the state-based testing (Classical TDD). 
+
+```
+# Mockists TDD practitioners 
+RED -> (mock dependencies) GREEN -> RED -> GREEN (mock dependencies)
+```
+
+Developer that know more that one flavor of TDD can obviously jump from one to another, case by case. The problem with jumping is that some of tests will still fail during the Refactoring step (those with Mocked dependencies)
+and that we have to remember to create some additional end to end tests with real dependencies for the classes we developed with Mockist TDD approach. If you forget to create them, your system may not work at all
+although all your tests are green. We definitely don't want to be there. 
+
+
+## It's all about confidence
+
+If you do Continuous Delivery, a successful build with all the tests Green switches the 'Deploy' button on. This button can be then pressed by someone in charge to deploy it to production.
+If you do Continuous Deployment, there is even no need for the 'Deploy' button.. If you don't have enough confidence to promise any of that, you are not there yet.
+In our case, whenever all the tests are Green and we are happy with the scope delivered so far, we can deploy our Diamond app to production. At the moment, all we know is
+that it works fine for letter A and B, but we know nothing about the rest of the alphabet. 
+
+Testing can only prove the presence of or absence of some, but not all, bugs. In our case, testing only two cases is clearly not enough. So far, our tests are example-based tests, not property-based tests.
+Those testing strategies are not mutually exclusive and one can support another.
+When we do property-based testing, we need to verify sufficient number of properties, so that we know that for each input there will be a correct output produced.
+When we test using examples, we need to be sure that there are enough examples that implicitly test all the properties we care about and that we can extrapolate assumptions based on limited examples to be confident
+that our software will produce correct outputs regardless of the input. I would be much more confident if I proved that Diamond produces correct output with more than two letters.
+
+I could test the case with the letter Z. It would give me a lot of confidence. I am planning to do it when the feature is ready, as a confirmation that the solution is generic enough
+to produce correct result even for complex cases. However, as the feature is still under development, I will pick the cases that does not turn my refactoring efforts into nightmare - just enough
+to give me confidence at this stage. I am not even sure if this is necessary - maybe letter A and B are enough to highlight all the underlying rules of the final solution. As I am not confident though,
+I will do that, to be on a safe side. It takes only couple of seconds, so the confidence boost / test TCO ratio is quite high.
+
+```groovy
+class DiamondAcceptanceTest extends Specification {
+
+  // ...
+
+  def "creates diamond-like shape"() {
+    expect:
+    Diamond.of(Letter.C).rendered() == "" +
+            "  A  " + "\n" +
+            " B B " + "\n" +
+            "C   C" + "\n" +
+            " B B " + "\n" +
+            "  A  "
+  }
+}
+```
+
+The just added test is Red, time to make them Green again.
+
+```java
+public class Diamond {
+
+  private Letter letter;
+
+  public static Diamond of(Letter letter) {
+    return new Diamond(letter);
+  }
+
+  private Diamond(Letter letter) {
+    this.letter = letter;
+  }
+
+  public String rendered() {
+    if (letter == A)
+    {
+      return new Board(new PositionedLetter(ofYX(0,0), A)).toString();
+    }
+    if (letter == B)
+    {
+      return new Board(
+              new PositionedLetter(ofYX(0,1), A),
+              new PositionedLetter(ofYX(1,0), B), new PositionedLetter(ofYX(1,2), B),
+              new PositionedLetter(ofYX(2,1), A)
+      ).toString();
+    }
+
+    return new Board(
+            new PositionedLetter(ofYX(0,2), A),
+            new PositionedLetter(ofYX(1,1), B), new PositionedLetter(ofYX(1,3), B),
+            new PositionedLetter(ofYX(2,0), C), new PositionedLetter(ofYX(2,4), C),
+            new PositionedLetter(ofYX(3,1), B), new PositionedLetter(ofYX(3,3), B),
+            new PositionedLetter(ofYX(4,2), A)
+    ).toString();
+
+  }
+}
+```
+
+All of them are Green again. [It's time to commit](https://github.com/michaelszymczak/blog-support/commit/ab42e6db69bc18e95af132b7ccd495a335808149)
+
+We just turned Red into Green, which means that we can do some Refactoring. The big cycle Refactoring step can be achieved by a couple of small cycles.
+A few commits ago we discovered that the Diamond class had too many responsibilities. By extracting one of the responsibilities (formatting the output)
+into a separate class, we made the next refactoring steps possible. The current refactoring is about delegating the calculation of the letter layout.
+
+In order to maintain a steady pace, we will replace coordinates one by one. Let's introduce the new class Layout that calculates the coordinates of letters.
+
+```groovy
+package com.michaelszymczak.diamond
+
+import spock.lang.Specification
+
+class LayoutShould extends Specification {
+  def "let the top letter to be in ordinal number distance from the top"() {
+    given:
+    def layout = new Layout()
+
+    expect:
+    layout.yOfTopLeft(Letter.A) == 0
+    layout.yOfTopLeft(Letter.C) == 2
+    layout.yOfTopRight(Letter.A) == 0
+    layout.yOfTopRight(Letter.C) == 2
+  }
+}
+```
+
+I have some idea how to implement the class, but before that let me confirm that the order in which I specify letters can be useful.
+
+```groovy
+package com.michaelszymczak.diamond
+
+import spock.lang.Specification
+
+class LetterShould extends Specification {
+
+  def "have position in the alphabet as its ordinal number"() {
+    expect:
+    Letter.A.ordinal() == 0
+    Letter.B.ordinal() == 1
+    Letter.C.ordinal() == 2
+    Letter.D.ordinal() == 3
+  }
+}
+```
+
+Now I can implement the Layout, in the simplest way possible of course.
+
+```java
+package com.michaelszymczak.diamond;
+
+public class Layout {
+
+
+  public int yOfTopLeft(Letter letter) {
+    return letter.ordinal();
+  }
+
+  public int yOfTopRight(Letter letter) {
+    return letter.ordinal();
+  }
+}
+```
+
+Having implemented calculating top left and top right y coordinate of the letters, I can now delegate this to the newly implemented class.
+ 
+```java
+public class Diamond {
+  // ...
+  public String rendered() {
+    final Layout layout = new Layout();
+    if (letter == A)
+    {
+      return new Board(new PositionedLetter(ofYX(layout.yOfTopLeft(A),0), A)).toString();
+    }
+    if (letter == B)
+    {
+      return new Board(
+              new PositionedLetter(ofYX(layout.yOfTopLeft(A),1), A),
+              new PositionedLetter(ofYX(layout.yOfTopLeft(B),0), B), new PositionedLetter(ofYX(layout.yOfTopRight(B),2), B),
+              new PositionedLetter(ofYX(2,1), A)
+      ).toString();
+    }
+
+    return new Board(
+            new PositionedLetter(ofYX(layout.yOfTopLeft(A),2), A),
+            new PositionedLetter(ofYX(layout.yOfTopLeft(B),1), B), new PositionedLetter(ofYX(1,3), B),
+            new PositionedLetter(ofYX(layout.yOfTopLeft(C),0), C), new PositionedLetter(ofYX(layout.yOfTopRight(C),4), C),
+            new PositionedLetter(ofYX(3,1), B), new PositionedLetter(ofYX(3,3), B),
+            new PositionedLetter(ofYX(4,2), A)
+    ).toString();
+
+  }
+}
+```
+
+We have just finished the first small cycle of the bigger Refactoring step. [Let's commit it](https://github.com/michaelszymczak/blog-support/commit/43527243bb5fcc2767c660a5d3ec0a1d37af008d)
+
+## Outside-in TDD with Refactoring made possible
+
+I think this is the focal point of this blog and a stark example of the power of this flavor of TDD. We reached the point when we are able to extract the logic piece by piece,
+maintaining the small Red Green Refactor steps. The refactoring is not only possible, but it is almost enforced as it is the only reasonable way to progress. On top of that,
+we refactor the code that already works, so all our efforts won't be wasted. The refactoring step has been postponed just enough to make an informed decision on what kind of refactoring makes sense and supports the final solution.
+If you compare it to the Mockists TDD refactoring, that is done way before we have a working solution, and with bottom-up Classicist TDD where we are not sure if all the classes we create will be useful at all,
+you can clearly see the benefits. 
+
+## Minimal Viable Product
+
+Let's pretend that we run out of time and money (after 10 minutes, I know, tough market). Our Diamond startup's venture capital firm demands some results before the next round of funding. After [some research](https://en.wikipedia.org/wiki/Letter_frequency)
+we think that already supported letters A, B and C account to roughly 10% of the use cases. Instead of waiting, let's produce some diamonds, earn some money and collect some feedback!
+Business is fine with rejecting requests for diamonds with letters other than A,B or C until they are implemented. We are happy to deploy the existing version as MVP. 
+
+Meanwhile in the bottom-up Classicist TDD camp...
+
+--- Dev: "We have some classes already implemented, but we are not ready yet to create a Diamond class"
+
+--- Product Owner: "OK, what if we cut the scope and release only A adn B diamonds, without C?"
+
+--- Dev to other Dev: "He doesn't get it, does he?"
  
 
-```
-# Some Mockists TDD practitioners 
-RED -> GREEN -> (red->green->refactor) -> REFACT.. oh sh**t, 30 failing tests
-```
+Meanwhile in the Mockist TDD camp...
+ 
+--- Dev: "We have all tests green and 100% test coverage"
 
-<p>
-</p>
+--- Product Owner: "Excellent, way ahead of the schedule, let's deploy it"
+
+--- Dev: "Actually, if we did it, it wouldn't work at all"
+
+--- Product Owner: "Can you next time do what you are paid for?"
+ 
+(Hint: if you are from the Mockist TDD camp, make sure you use [walking skeletons](http://wiki.c2.com/?WalkingSkeleton).)
+
+
