@@ -845,25 +845,189 @@ Let's pretend that we run out of time and money (after 10 minutes, I know, tough
 we think that already supported letters A, B and C account to roughly 10% of the use cases. Instead of waiting, let's produce some diamonds, earn some money and collect some feedback!
 Business is fine with rejecting requests for diamonds with letters other than A,B or C until they are implemented. We are happy to deploy the existing version as MVP. 
 
-Meanwhile in the bottom-up Classicist TDD camp...
-
---- Dev: "We have some classes already implemented, but we are not ready yet to create a Diamond class"
-
---- Product Owner: "OK, what if we cut the scope and release only A adn B diamonds, without C?"
-
---- Dev to other Dev: "He doesn't get it, does he?"
+>Meanwhile in the bottom-up Classicist TDD camp...
+>
+>-Dev: "We have some classes already implemented, but we are not ready yet to create a Diamond class"
+>
+>-Product Owner: "OK, what if we cut the scope and release only A adn B diamonds, without C?"
+>
+>-Dev to other Dev: "He doesn't get it, does he?"
  
 
-Meanwhile in the Mockist TDD camp...
+>Meanwhile in the Mockist TDD camp...
+> 
+>--- Dev: "We have all tests green and 100% test coverage"
+>
+>--- Product Owner: "Excellent, way ahead of the schedule, let's deploy it"
+>
+>--- Dev: "Actually, if we did it, it wouldn't work at all"
+>
+>--- Product Owner: "Can you next time do what you are paid for?"
+>
+> (Hint: if you are from the Mockist TDD camp, make sure you use [walking skeletons](http://wiki.c2.com/?WalkingSkeleton).)
  
---- Dev: "We have all tests green and 100% test coverage"
 
---- Product Owner: "Excellent, way ahead of the schedule, let's deploy it"
-
---- Dev: "Actually, if we did it, it wouldn't work at all"
-
---- Product Owner: "Can you next time do what you are paid for?"
+They are of course just a humorous stories and reality is never as simple as that. However, it highlights very important quality of the approach we took, namely, that we always focus on
+the end goal and try to achieve it as quickly as possible. We do it incrementally, so that the progress can be actually measured and we we think we are 80% done, we probably are.
+This is due not only to the fact that we implement working (as opposed to mocked) software outside-in, but also to the preparatory work (described in one of first chapters of this blog), that addressed the highest risks first.
+If you read my other blog posts, e.g. about Specification by Example, you can notice the same pattern applied at various levels of abstraction. It allows you to measure the progress both on a macro- and a micro-scale.
  
-(Hint: if you are from the Mockist TDD camp, make sure you use [walking skeletons](http://wiki.c2.com/?WalkingSkeleton).)
+## Keep calm and carry on with TDD
+
+Next steps are quite obvious. We replace one by one each of the hardcoded coordinates, making the code more and more generic.
+
+We noticed that there is only one y coordinate for each top letter, regardless of the left-ness or right-ness of them. We were Green, so we were able to refactor it.
+We then followed with created the next test demanding calculating y coordinates of bottom letters. We had to hold our horses, having realised that the y coordinates of bottom letter depend not only
+on the letter in question, but also on the letter used as an input. In other words, the stateless, immutable Layout became an immutable, but stateful one.
+
+```
+  A
+ B B <- same y coordinate for both top letters
+C   C
+ B B <- same y coordinates for both bottom letters, that depend on the input (maximum) letter
+  A
+```
+
+As an intermediate step, we can deprecate the old constructor, so that all the tests are still Green. The deprecated constructor will be removed after migrating all clients into the stateful version
+of the Layout. I am also in favour of using [static factory methods if they help to understand the meaning](http://www.informit.com/articles/article.aspx?p=1216151).
+
+```java
+public class Layout {
+
+  private final Letter lastLetter;
+
+  public static Layout forLastLetterBeing(Letter lastLetter) {
+    return new Layout(lastLetter);
+  }
+  
+  @Deprecated
+  public Layout() {
+      this(Letter.A);
+  }
+
+  public Layout(Letter lastLetter) {
+    this.lastLetter = lastLetter;
+  }
+}
+```
+
+The existing test has been refactored as follows.
+
+```groovy
+class LayoutShould extends Specification {
+  def "let the top letter to be in ordinal number distance from the top"() {
+    given:
+    def layout = layout()
+
+    expect:
+    layout.yOfTop(Letter.A) == 0
+    layout.yOfTop(Letter.C) == 2
+  }
+
+  private static Layout layout() {
+    Layout.forLastLetterBeing(Letter.C)
+  }
+}
+```
+
+Although we now instantiate Layout passing the last letter in the diamond `Layout.forLastLetterBeing(Letter.C)`, this is irrelevant for the first test, therefore
+we hide this detail behind the method `def layout = layout()`. When testing, we should try to hide all the implementation details irrelevant for the outcome of the test,
+and make explicit all detail that are relevant. This approach makes the test understandable, [keeping cause and effect clear](https://testing.googleblog.com/2017/01/testing-on-toilet-keep-cause-and-effect.html)
+
+We are ready to demand more from the Layout - to calculate y coordinates of the bottom letters. In this case the last letter is important, so we make this explicit.
+ 
+```groovy
+class LayoutShould extends Specification {
+  // ...
+  def "let the bottom letter to be in ordinal number distance from the bottom which is twice the ordinal number of the max letter"() {
+    given:
+    def layout = Layout.forLastLetterBeing(Letter.D)
+
+    expect:
+    layout.yOfBottom(Letter.D) == 3
+    layout.yOfBottom(Letter.C) == 4
+    layout.yOfBottom(Letter.B) == 5
+    layout.yOfBottom(Letter.A) == 6
+  }
+}
+```
+
+Turning from Red into Green is as easy as realising that the diamond is almost twice as high as the ordinal number of the last letter (as each but the middle one appears twice) and the
+calculated letter is as far from the bottom as its ordinal number.
+
+```java
+public class Layout {
+
+  private final Letter lastLetter;
+
+  public static Layout forLastLetterBeing(Letter lastLetter) {
+    return new Layout(lastLetter);
+  }
+
+  private Layout(Letter lastLetter) {
+    this.lastLetter = lastLetter;
+  }
+
+  public int yOfTop(Letter letter) {
+    return letter.ordinal();
+  }
+
+  public int yOfBottom(Letter letter) {
+    return lastLetter.ordinal() * 2 - letter.ordinal();
+  }
+}
+```
 
 
+As we are on Green again, let's finish with Refactoring, that closes the next small cycle of the bigger Refactoring cycle we are still in.
+All y coordinates of each positioned letter are now calculated by the Layout.
+
+```java
+package com.michaelszymczak.diamond;
+
+import static com.michaelszymczak.diamond.Coordinates.ofYX;
+import static com.michaelszymczak.diamond.Letter.*;
+
+public class Diamond {
+
+  private Letter letter;
+
+  public static Diamond of(Letter letter) {
+    return new Diamond(letter);
+  }
+
+  private Diamond(Letter letter) {
+    this.letter = letter;
+  }
+
+  public String rendered() {
+    if (letter == A)
+    {
+      Layout layout = Layout.forLastLetterBeing(A);
+      return new Board(new PositionedLetter(ofYX(layout.yOfTop(A),0), A)).toString();
+    }
+    if (letter == B)
+    {
+      Layout layout = Layout.forLastLetterBeing(B);
+      return new Board(
+              new PositionedLetter(ofYX(layout.yOfTop(A),1), A),
+              new PositionedLetter(ofYX(layout.yOfTop(B),0), B), new PositionedLetter(ofYX(layout.yOfTop(B),2), B),
+              new PositionedLetter(ofYX(layout.yOfBottom(A),1), A)
+      ).toString();
+    }
+
+    Layout layout = Layout.forLastLetterBeing(C);
+    return new Board(
+            new PositionedLetter(ofYX(layout.yOfTop(A),2), A),
+            new PositionedLetter(ofYX(layout.yOfTop(B),1), B), new PositionedLetter(ofYX(layout.yOfTop(B),3), B),
+            new PositionedLetter(ofYX(layout.yOfTop(C),0), C), new PositionedLetter(ofYX(layout.yOfTop(C),4), C),
+            new PositionedLetter(ofYX(layout.yOfBottom(B),1), B), new PositionedLetter(ofYX(layout.yOfBottom(B),3), B),
+            new PositionedLetter(ofYX(layout.yOfBottom(A),2), A)
+    ).toString();
+
+  }
+}
+```
+
+[It's enough to commit it](https://github.com/michaelszymczak/blog-support/commit/5bb73a9f6782f08e0082c512c3bb1355cae36f86).
+ 
