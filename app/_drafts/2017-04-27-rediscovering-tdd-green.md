@@ -1031,3 +1031,93 @@ public class Diamond {
 
 [It's enough to commit it](https://github.com/michaelszymczak/blog-support/commit/5bb73a9f6782f08e0082c512c3bb1355cae36f86).
  
+In the [next commit](https://github.com/michaelszymczak/blog-support/commit/e65563a37f419facebebdbbbc30ff990e1a2b681) , the x coordinates
+of the letters forming the left hand side of the diamond has been calculated as well. It happens to be simply a difference between the maximum and given letter's ordinal number.
+
+If the x coordinate of the left letter was a difference, the x coordinate of the right letter is a sum of the maximum and given letter,
+which was implemented in the [subsequent commit](https://github.com/michaelszymczak/blog-support/commit/fe3bb6271db0a50b98ba411571921e3614577dd2). 
+I also unnecessarily inlined the test fixtures of the 'let the top letter to be in ordinal number distance from the top', but luckily the test is small enough to still pose no challenge in understanding it.
+
+At this stage, all of the coordinates are calculated automatically and the Diamond implementation looks as follows.
+
+```java
+package com.michaelszymczak.diamond;
+
+import static com.michaelszymczak.diamond.Coordinates.ofYX;
+import static com.michaelszymczak.diamond.Letter.*;
+
+public class Diamond {
+
+  private Letter letter;
+
+  public static Diamond of(Letter letter) {
+    return new Diamond(letter);
+  }
+
+  private Diamond(Letter letter) {
+    this.letter = letter;
+  }
+
+  public String rendered() {
+    if (letter == A)
+    {
+      Layout layout = Layout.forLastLetterBeing(A);
+      return new Board(new PositionedLetter(ofYX(layout.yOfTop(A),layout.xOfLeft(A)), A)).toString();
+    }
+    if (letter == B)
+    {
+      Layout layout = Layout.forLastLetterBeing(B);
+      return new Board(
+              new PositionedLetter(ofYX(layout.yOfTop(A),layout.xOfLeft(A)), A),
+              new PositionedLetter(ofYX(layout.yOfTop(B),layout.xOfLeft(B)), B), new PositionedLetter(ofYX(layout.yOfTop(B),layout.xOfRight(B)), B),
+              new PositionedLetter(ofYX(layout.yOfBottom(A),layout.xOfLeft(A)), A)
+      ).toString();
+    }
+
+    Layout layout = Layout.forLastLetterBeing(C);
+    return new Board(
+            new PositionedLetter(ofYX(layout.yOfTop(A),layout.xOfLeft(A)), A),
+            new PositionedLetter(ofYX(layout.yOfTop(B),layout.xOfLeft(B)), B), new PositionedLetter(ofYX(layout.yOfTop(B),layout.xOfRight(B)), B),
+            new PositionedLetter(ofYX(layout.yOfTop(C),layout.xOfLeft(C)), C), new PositionedLetter(ofYX(layout.yOfTop(C),layout.xOfRight(C)), C),
+            new PositionedLetter(ofYX(layout.yOfBottom(B),layout.xOfLeft(B)), B), new PositionedLetter(ofYX(layout.yOfBottom(B),layout.xOfRight(B)), B),
+            new PositionedLetter(ofYX(layout.yOfBottom(A),layout.xOfLeft(A)), A)
+    ).toString();
+
+  }
+}
+```
+
+
+## You're not a beautiful and unique snowflake.
+
+Hey, edge case, you are not special. You're not a beautiful and unique snowflake. Whenever I see an if, I see an opportunity
+to discover something deeper about the problem I am solving. Ideally, the solution should be applicable
+to all the cases, even the edge ones. Edge cases are not inherently special. They simply make great test fixtures.
+Let's look a the diamond shape again.
+
+```
+   A
+  B B
+ C   C
+D     D
+ C   C
+  B B
+   A
+```
+
+The first and last letters (A and D respectively) seem to be special. They occur only twice, whereas all other letters occur exactly four times.
+It has been expressed in our current Diamond implementation, when we have only one `PositionedLetter` in case A, 4 of them in the case B and 8 in case of C.
+Similarly to the physicists searching for the [Theory of everything](https://en.wikipedia.org/wiki/Theory_of_everything), and trying to get rid of this
+annoying 'if (large-scale and high-mass) then apply general relativity, if (small scale and low mass) then apply quantum field theory' if statement,
+we will try to find the Theory of every letter for our Diamond. 
+
+I was looking at the diamond shapes and on the if statements, when the 'aha' moment happened. What if the diamond shape is just a projection of letters onto the two-dimensional space,
+and each letter, like in a kaleidoscope, occurs several times. Four times, to be precise, no ifs, no buts. The thing is that some of the letters are projected on top of each other, covering
+the one being underneath. Even letter 'A' in A-diamond occurs four times. All of them in the same place, that is why we can see only one 'A'.
+
+```
+A <- 4 letters A with coordinates: (0,0), (0,0), (0,0), (0,0)
+```
+
+Any serious theoretical physicist, after coming up with new hypothesis, rigorously uses matematical aparatus to prove it. They have to be disciplined, not to make any mistakes that can invalidate their attempts.
+Any serious developer, after coming up with new hypothesis, verifies it in a disciplined manner. TDD (done right) is a great and practical tool that makes this verification possible. 
