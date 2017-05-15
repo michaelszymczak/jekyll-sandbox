@@ -1,16 +1,17 @@
 ---
 layout: post
-title:  "Rediscovering TDD - Green is new Red"
+title:  "Rediscovering TDD - My favourite flavour of TDD"
 category: software
 tags: ["software-craftsmanship", "tdd", "test-driven-development"]
 ---
 
 <p class="excerpt">
-In the previous post I promised that I would show how I do TDD. I am doing it in this blog.
-It is an advance TDD in a sense that in order to appreciate it fully, one should have probably tried various approaches, be aware
-of some shortcomings when picking either classical or mockist approach etc. At the same time, this blog should be understood even by beginners
+As promised in the previous post, it's time to show how I do TDD.
+It is an advanced TDD blog post in a sense that in order to appreciate it fully, one should have probably tried various approaches, be aware
+of some shortcomings when picking either classic or mockist approach etc. At the same time, this blog should be understood even by beginners
 as this is yet another way of doing TDD. Nothing prevents a person that has never tried TDD to apply this particular approach, even if they
-do not know the difference between above mentioned classical and mockist TDD. 
+do not know the difference between above mentioned classical and mockist TDD. In fact, I think that the industry as a whole would
+be much better of if the first style of TDD that newcomers come across was the one presented here.
 </p>
 <span class="readmore"/>
 
@@ -1239,7 +1240,7 @@ steps for a while, doing just-enough, just-in-time design as you go.
   |  +  Green <-------+----'       +                 +                    +  Yes
   |  +     '----------+------------+> Red            +                    + 
   |  +                +            + Green           +                    +  Yes
-  |  +                +            +Refactor         +                    + 
+  |  +                +            +Refactor         +                    +  Yes
   |  +                + Refactor <-+---'             +                    +  Yes
   |  +  Final test    +   '        +                 +                    + 
   |  +  as ultimate <-+---'        +                 +                    + 
@@ -1247,7 +1248,7 @@ steps for a while, doing just-enough, just-in-time design as you go.
   |  +  Green?        +            +                 +                    +  
   |  +   |            +            +                 +                    + 
   |  +   v            +            +                 +                    + 
-  |  +  DONE          +            +                 +                    +  Yes
+  |  +  DONE          +            +                 +                    +  Yes!
   |  +                +            +                 +                    +
   |  
   v   
