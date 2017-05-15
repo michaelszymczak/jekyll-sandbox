@@ -1126,8 +1126,132 @@ the one being underneath. Even letter 'A' in A-diamond occurs four times. All of
 A <- 4 letters A with coordinates: (0,0), (0,0), (0,0), (0,0)
 ```
 
-Any serious theoretical physicist, after coming up with new hypothesis, rigorously uses matematical aparatus to prove it.
+## TDD makes verifying your ideas easy 
+
+Any serious theoretical physicist, after coming up with new hypothesis, rigorously uses mathematical apparatus to prove it.
 Experimentalists, on the other hand, tend to conduct a series of experiments to discover new features, or to support or discard the existing hypothesis.
-Both of them have to be disciplined, not to make any mistakes that can render their efforts useless.
-Along the same lines, any serious developer, after coming up with new hypothesis, examine it thoroughly. TDD (done right) is a great and practical tool that makes this verification possible.
-Scientists wish they had access to such controlled environment, when all experiments are repeatable - appreciate it and treat you tests with respect. 
+TDD practitioners are somewhat closer to the latter. Both of them have to be disciplined though, not to make any mistakes that can render their efforts useless.
+TDD (done right) is a great and practical tool that makes the verification phase possible and reliable.
+Scientists can only wish they had access to such controlled environment, when all experiments are repeatable. Appreciate and enjoy it.
+
+Our most recent hypothesis is that each letter is projected in four places - sometimes different, sometimes overlapping. Let's verify it. 
+
+```java
+public class Diamond {
+  // ...
+  public String rendered() {
+    if (letter == A)
+    {
+      Layout layout = Layout.forLastLetterBeing(A);
+      return new Board(
+              new PositionedLetter(ofYX(layout.yOfTop(A),layout.xOfLeft(A)), A),
+              new PositionedLetter(ofYX(layout.yOfTop(A),layout.xOfRight(A)), A),
+              new PositionedLetter(ofYX(layout.yOfBottom(A),layout.xOfLeft(A)), A),
+              new PositionedLetter(ofYX(layout.yOfBottom(A),layout.xOfRight(A)), A)
+      ).toString();
+    }
+    if (letter == B)
+    {
+      Layout layout = Layout.forLastLetterBeing(B);
+      return new Board(
+              new PositionedLetter(ofYX(layout.yOfTop(A),layout.xOfLeft(A)), A),
+              new PositionedLetter(ofYX(layout.yOfTop(A),layout.xOfRight(A)), A),
+              new PositionedLetter(ofYX(layout.yOfBottom(A),layout.xOfLeft(A)), A),
+              new PositionedLetter(ofYX(layout.yOfBottom(A),layout.xOfRight(A)), A),
+              
+              new PositionedLetter(ofYX(layout.yOfTop(B),layout.xOfLeft(B)), B),
+              new PositionedLetter(ofYX(layout.yOfTop(B),layout.xOfRight(B)), B),
+              new PositionedLetter(ofYX(layout.yOfBottom(B),layout.xOfLeft(B)), B),
+              new PositionedLetter(ofYX(layout.yOfBottom(B),layout.xOfRight(B)), B)
+      ).toString();
+    }
+
+    Layout layout = Layout.forLastLetterBeing(C);
+    return new Board(
+            new PositionedLetter(ofYX(layout.yOfTop(A),layout.xOfLeft(A)), A),
+            new PositionedLetter(ofYX(layout.yOfTop(A),layout.xOfRight(A)), A),
+            new PositionedLetter(ofYX(layout.yOfBottom(A),layout.xOfLeft(A)), A),
+            new PositionedLetter(ofYX(layout.yOfBottom(A),layout.xOfRight(A)), A),
+            
+            new PositionedLetter(ofYX(layout.yOfTop(B),layout.xOfLeft(B)), B),
+            new PositionedLetter(ofYX(layout.yOfTop(B),layout.xOfRight(B)), B),
+            new PositionedLetter(ofYX(layout.yOfBottom(B),layout.xOfLeft(B)), B),
+            new PositionedLetter(ofYX(layout.yOfBottom(B),layout.xOfRight(B)), B),
+
+            new PositionedLetter(ofYX(layout.yOfTop(C),layout.xOfLeft(C)), C),
+            new PositionedLetter(ofYX(layout.yOfTop(C),layout.xOfRight(C)), C),
+            new PositionedLetter(ofYX(layout.yOfBottom(C),layout.xOfLeft(C)), C),
+            new PositionedLetter(ofYX(layout.yOfBottom(C),layout.xOfRight(C)), C)
+    ).toString();
+
+  }
+}
+```
+
+Don't worry, it's OK to introduce slightly more code if it makes the future refactoring easier and helps to spot some patterns.
+As this was a Refactoring step, let's run all the tests to see if they are still Green. They are, which means that our hypothesis was
+most probably right, so [a commit is in place](https://github.com/michaelszymczak/blog-support/commit/52368faedd3e9973c7de2da5f980386a080cc2e3).
+
+## On man's Refactoring is another man's full TDD cycle
+ 
+I think I repeat myself, but in the flavour of TDD that I practice, the magic happens at many levels at the same time. Bigger unit is Refactored (here - Diamond class), while
+smaller units are part of the full TDD cycle with Red, Green Refactor.
+
+The following ASCII-art presents my favourite way of doing TDD, which is an **outside-in, classic, stay-on-green, quick-transitions, just-enough-design, flavour of TDD**.
+The vertical axis symbolizes time, passing from the top to the bottom.
+The horizontal axis symbolizes the scale, where left hand side is specification/acceptance test facing.
+The more to the right, the more fine grained the tests, and corresponding units of production code, are.
+Starting from the top-left corner and following the arrows, you will eventually finish at DONE.
+Each step down shouldn't take more than a minute. Whenever all the tests are green, you are allowed
+(and often encouraged), to commit your work. You can also take a break or think about the next
+steps for a while, doing just-enough, just-in-time design as you go.
+
+
+```
+ Time
+  |
+  |  |                         Outside <-> Inside                         |
+  |  |                  Coarse grained <-> Fine Grained                   |
+  |  +--------------------------------------------------------------------+------------
+  |  |  Specification |  Big Unit  |  Smaller Units  | Even Smaller Units | Can commit?
+  |  +--------------------------------------------------------------------+------------
+  |  +                +            +                 +                    + 
+  |  +    Red         +            +                 +                    + 
+  |  +     '--------> + Naive impl +                 +                    + 
+  |  +    Green <-----+-----'      +                 +                    +  Yes
+  |  +      '---------+------------+--> Red          +                    + 
+  |  +                +            +   Green         +                    +  Yes
+  |  +                +            +     '-----------+--> Red             + 
+  |  +                +            +                 +   Green            +  Yes
+  |  +                +            +                 +  Refactor          +  Yes
+  |  +                +            +                 +     |              + 
+  |  +                +            +                 +     v              + 
+  |  +                +            +                 +    Red             + 
+  |  +                +            +                 +   Green            +  Yes
+  |  +                +            +                 +  Refactor          +  Yes
+  |  +                +            +  Refactor <-----+-----'              +  Yes
+  |  +                +            +    Red          +                    + 
+  |  +                +            +   Green         +                    +  Yes
+  |  +                +            +  Refactor       +                    +  Yes
+  |  +                + Refactor <-+-----'           +                    +  Yes
+  |  +   Red   <------+----'       +                 +                    + 
+  |  +    '---------->+Quick impl  +                 +                    +  Yes
+  |  +  Green <-------+----'       +                 +                    +  Yes
+  |  +     '----------+------------+> Red            +                    + 
+  |  +                +            + Green           +                    +  Yes
+  |  +                +            +Refactor         +                    + 
+  |  +                + Refactor <-+---'             +                    +  Yes
+  |  +  Final test    +   '        +                 +                    + 
+  |  +  as ultimate <-+---'        +                 +                    + 
+  |  +  proof         +            +                 +                    + 
+  |  +  Green?        +            +                 +                    +  
+  |  +   |            +            +                 +                    + 
+  |  +   v            +            +                 +                    + 
+  |  +  DONE          +            +                 +                    +  Yes
+  |  +                +            +                 +                    +
+  |  
+  v   
+
+```
+
+
