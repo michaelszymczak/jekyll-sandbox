@@ -8,9 +8,9 @@ tags: ["software-craftsmanship", "tdd", "test-driven-development"]
 <p class="excerpt">
 In the previous post I promised that I would show how I do TDD. I am doing it in this blog.
 It is an advance TDD in a sense that in order to appreciate it fully, one should have probably tried various approaches, be aware
-of some shortcomings when picking either classicist or mockist approach etc. At the same time, this blog should be understood even by beginners
+of some shortcomings when picking either classical or mockist approach etc. At the same time, this blog should be understood even by beginners
 as this is yet another way of doing TDD. Nothing prevents a person that has never tried TDD to apply this particular approach, even if they
-do not know the difference between above mentioned classicists and mockists. 
+do not know the difference between above mentioned classical and mockist TDD. 
 </p>
 <span class="readmore"/>
 
@@ -20,8 +20,7 @@ this may be a nice example showing my way of TDD. Requirement-wise, it is quite 
 to be useful when presenting TDD. The solution I came up with is not necessarily the best one (define 'best'), but it is not about the solution as the problem has been
  already solved many times. As always in code katas, the journey is more important than the destination.
  
-I want to show you my approach commit by commit, highlighting and commenting interesting pieces. Feel free to check out the project 
-[kata-diamond](https://github.com/michaelszymczak/kata-diamond/tree/master) .
+I want to show you my approach commit by commit, highlighting and commenting interesting pieces.
 
 The problem is the following.
 
@@ -44,25 +43,26 @@ You have probably heard this many times. The process is the following.
 
 1. Write just enough new test code to make the test fail (Red)
 2. Write just enough production code to make the tests pass. (Green)
-3. Refactor - improve the design, without changing the observable (tested) behaviour.
+3. Refactor - improve the design, without changing the observable behaviour.
 
 As simple as that. However, there are many habits that make or break this approach.
 Taking small steps (the 'just enough' phrase) is probably the most important one. Spending hours
-on writing tests and after that writing production code is not TDD. It may be test-first, but definitely
-not test-driven, as each test should drive the implementation. This is a fine-grained version of being agile, i.e.
-as soon as you realise that the solution is not fit for purpose, being able to change the direction - and not even a second later.
+on writing tests and only after that writing production code is not TDD. It may be test-first, but definitely
+not test-driven, as each test should drive the implementation. TDD is a fine-grained version of being agile, i.e.
+constantly listening to the feedback and as soon as you realise that the solution is not fit for purpose, you stop and change the direction,
+or refactor to allow yourself to take another path.
 
 The challenge is to make this happen - to **find a path from red to green to refactor, spending on each step no more that a minute or so**.
 On top of that, you have to **repeat this sequence time and time again until you solve the problem**.
  
 > If you had to spend no more than one minute on each step and at the same time deliver a fully working, correct solution, that would 
-> change the way you code, wouldn't it.
+> change the way you code.
 
 Let's see why quick feedback loop and swiftly jumping from red to green and to refactor is important.
 
 - If you spend too much time on any of the steps, you loose the sense of progress, that keeps your brain focused and interested (applies to all steps).
 - If you spend too much time on Red (writing/changing production code) you risk introducing untested code. In addition, as the transition to
-the next implementation is not trivial, it is easy to make some mistake and introduce a bug. You also risk introducing the unnecessary code
+the next implementation is not trivial, it is easy to make some mistake and introduce a bug. You risk introducing the unnecessary code (be it 'correct' or not)
 that you will have to maintain later. Each line of code costs time and money and makes future you poorer and more busy. On top of that, more time you spend
 on Red, more likely it is that you will never manage to come back to Green and you will be forced to throw away all new code you created.
 - If you spend too much time on Refactoring it either means that you gold-plating or make you code more generic that it has to be, or that you have postponed it
@@ -70,7 +70,7 @@ to much and should have done it earlier. The cheapest refactoring time is right 
  as it will not be that obvious where to start and, what may be even more important, the messy code has already slowed you down. Keeping you codebase clean
 all the time is the quickest, cheapest and most pleasant way of writing software. The very existence of the 'quick and dirty' versus 'slower but clean' dilemma
 originates from the fact that so many mistakes and unjustified 'quick and dirty' design crimes have been already made that everyone is less and less eager to
-say no, take a blame, and fix it. As I said, refactor swiftly right after Red turned to Green and you will be happier, more agile and guilt-free.
+say no, take a blame, and fix it. As I said, refactor swiftly right after Red turned to Green and you will be happier, more agile and free from any guilt.
 
 ## Preparatory steps
 
@@ -117,12 +117,13 @@ would be nice if you experienced them on your own before I show you my approach.
 
 My main focus is to maintain a certain pace, moving from Red to Green to Refactor smoothly and without any risky leaps into unknown
 that would question the correctness of the implementation. In other words, the correctness of the solution is achieved by starting with the correct solution
-for the sub-problem and applying a series of trivial transformations (that you can easily explain and reason about) that end when the solution for the whole problem is found.
+for the sub-problem and applying a series of trivial transformations (that you can easily explain and reason about) that ends when the solution for the whole problem is found.
 
-The first approach I tried was the Classicist TDD. When you see some examples of Classicist TDD, the smooth transitions are achieved by doing it bottom-up - small chunks are implemented first
-and the final solution bottoms up. There is a catch though - I want the approach to be outside-in, so that we are sure that we solve the right problem. It means that we should start with the test that is as close to the original requirement as possible.
+The first approach I tried was the Classical TDD. When you see some examples of Classical TDD, the smooth transitions are achieved by doing it middle out, or bottom up - smaller chunks are implemented first
+and the final solution is created by making use of just created components. There is a catch though - I want the approach to be outside-in, so that we are sure that we solve the right problem.
+It means that we should start with the test that is as close to the original requirement as possible.
 In that sense, it is closer to what some describe as BDD @link, but for me the **outside-in approach is the most cost-effective one, as existence of each piece of logic is justified by some requirement**.
-If each piece of logic is justified by requirements, there is no un-justified code, that costs time and money, bringing no value. Compare it to the bottom-up approach, when we may end up creating
+If each piece of logic is justified by requirements, there is no un-justified code, that costs time and money, bringing no value. Compare it to the middle out/bottom up approach, when we may end up creating
 some unnecessary code that, in the best case, will be thrown away or, in the worst case, we will try to keep 'just for case' or use somewhere because we can't admit that we wasted time writing it in a first place.
  
 Quick pace and outside-in approach are two benefits of the Mockist TDD @link . You may think that I should simply use this approach then. There is another catch though. I believe that mocks should be used
@@ -249,7 +250,6 @@ The corresponding revision can be found [here](https://github.com/michaelszymcza
 "It's cheating!" - one may say - "There is no logic, just some hardcoded value!". It's true, and it is intentional. If we are able to satisfy all
 the requirements quickly and easily, the whole codebase benefits from it. We know that there are new requirements coming, that will make this naive solution insufficient,
  but NOW this is all we have to do. Let me repeat it - we should not write any code unless necessary. Nobody pays us for lines of code we write (I hope), but for solving problems in the most quick and maintainable way.
- As this test is an end to end one, at some point it may evolve into something similar to [Walking Skeleton](http://wiki.c2.com/?WalkingSkeleton).
  
 Let's do the next cycle.
 
@@ -343,32 +343,39 @@ public class Diamond {
 
 You can see the full commit [here](https://github.com/michaelszymczak/blog-support/commit/0d65319b95ed24d9d62f38d9a91776acc71423cd).
 
-### Once you go Green, you never go back
+### Stay on Green
 
-To practice TDD, one must be focused and disciplined. For example, there is one valid case when existing Green test can become Red. It is when we introduced a bug.
-If any of the Green tests turns Red, you revert the last change to be again on Green and look for another way to solve the problem.
+To practice TDD, one must be focused and disciplined. There are two cases when existing Green test can become a Red one. It is when we introduced a bug, or there was a bug/deprecated requirement in the test that became
+visible once we introduced new piece of production logic.
+If any of the Green tests turns Red because you have introduced a bug, you quickly revert the last change to be on Green again and come up with a new, this time correct, solution.
+If it turned red because you have found requirement that is not valid any more, you quickly revert the last change to be on Green again and look for a safer path that involves deprecation phase and supporting both old and new solution,
+removing the old test, and finally removing the deprecated code. There is no need to touch Red at all. Let me repeat it - once a test became green, it stays this way, until it is removed.
+You can think of modifying the behaviour that the test expects as of removing the old one and introducing a new one. If the change is small, you may win and be on Green soon enough, but if you can't do it in less
+than one minute, you probably save time by doing it the right way, that I described above.
 Another rule is that there can be only one Red test at a time - one that we have just written to express new requirement we are about to implement. It's quite strict, I know, but it is for a reason.
 Being on Green gives you much more feedback than being on Red. If you think about a software as a complex function transforming some input to some output, there is an infinite number of combinations 
-in which you can design it. If your application is deterministic, for each input there is one correct output and infinite number of incorrect outputs. If you add 1 to 0, there is only one correct answer, which is 1.
+in which you can implement it. If your application is deterministic, for each input there is one correct output and infinite number of incorrect outputs. If you add 1 to 0, there is only one correct answer, which is 1.
 There are many incorrect answers, starting from minus infinity and ending at plus infinity, excluding number 1. Being on Red means being somewhere between minus infinity and plus infinity, but not 1. Being on Green means
 being on 1. If you compare those two sets, you can easily notice that Green gives you precise answer, whereas Red gives you almost no answer whatsoever. If you stay on Green, you know exactly where you are. If you are on Red,
 you have no idea if you are close to the actual requirements, or you are as far as you could be. The only useful thing about Red is the moment when it becomes one. On it's own, being on Red gives you nothing.
 The next useful moment is when it turns Green again. That is why xUnit test frameworks do not display anything when they are on Green and can be quite verbose when they are on Red - it is because Red on it's own gives you nothing.
-Conversely, Green on its own gives you a lot. You know exactly where you are and, regardless of what you do (i.e. refactor), you stays exactly there. Green saves your time, Red wastes it. Red is like a lava.
-Once you touch it, you need quickly jump on the grass again.
+Conversely, Green on its own gives you a lot. You know exactly where you are and, regardless of what you do (i.e. refactor), you stay exactly there. Green saves your time, Red wastes it. Red is like a lava.
+Once you touch it, you need quickly jump back on the grass again. Not by jumping further hoping that you will eventually find some new land with grass (you may be dead by then), but by jumping back at the place when you
+knew that was green (which as an equivalent of reverting the last changes). Reverting changes is not a popular choice among developers. Remember, however, that you don't have to revert more than 60 seconds of your work.
+If you do, revert what you have already learned and start reading this blog post from the start again.
 
-If you want to be much more productive when practicing TDD, try to be on Green almost all the time. Avoid debugging, reasoning about failed assertions and, at all cost, avoid flaky tests
+Long story short, if you want to be much more productive when practicing TDD, try to be on Green almost all the time. Avoid debugging, reasoning about failed assertions and, at all cost, avoid flaky tests
 (I was a bit disappointed when I [read](https://testing.googleblog.com/2017/04/where-do-our-flaky-tests-come-from.html), that at Google around 1.5% of their tests are flaky over the course of a week.
-In the current project I work on this number is 0%, out of couple of thousands, and this should be you target as well.) 
+In the current project I've been working for one year, this number is still 0%, and this should be you target as well.) 
 
-### Overcoming dead-end
+### Overcoming dead-ends
 
-It's time to introduce something more sophisticated, otherwise our solution would have almost as many ifs as there are letters in the alphabet. As this is an algorithmic kata,
+Let's go back to our Diamond kata. It's time to introduce something more sophisticated, otherwise our solution would have almost as many ifs as there are letters in the alphabet. As this is an algorithmic kata,
 we could use the [Transformation Priority Premise](https://8thlight.com/blog/uncle-bob/2013/05/27/TheTransformationPriorityPremise.html) to guide us when writing the tests (try it, it's an excellent exercise).
 The approach I want to show you is, in my opinion, slightly simpler to apply, and, on top of that, it can be used in any context, not necessarily an algorithmic one.
 
 As I mentioned earlier, all the tests I have already wrote should stay Green and acceptance tests are no exception. I can't simply add more and more if statements, so now is the right time to think about the overall design.
-It's clear that in order to progress, some refactoring is necessary. I notices that I struggled, because the Diamond class has too many responsibilities. The responsibilities are hidden behind the simple output string,
+It's clear that in order to progress, some refactoring is necessary. I noticed that I struggled, because the Diamond class has too many responsibilities. The responsibilities are hidden behind the simple output string,
 but if you look closely at you thought process when you reason about the solution, you can discover, that you:
 
 - make sure that the right letters are present
@@ -626,12 +633,12 @@ that I would classify as a pre-refactoring step for a Diamond class.
 RED -> GREEN -> (red->green->refactor) REFACTOR
 ```
 
-In the light of big and small cycles, my approach differs from bottom-up clasitist TDD in a sense that small Red-Green-Refactor cycles are part of a Refactor phase in a bigger cycle, whereas in bottom-up
-classicist TDD small Red-Gree-Refactor cycles happens before the Red phase of a bigger cycle, i.e. small building blocks are developer first, then higher-level functionality is specified (Red) and implemented
+In the light of big and small cycles, my approach differs from middle out/bottom up classic TDD in a sense that small Red-Green-Refactor cycles are part of a Refactor phase in a bigger cycle, whereas in middle out/bottom up
+classical TDD small Red-Gree-Refactor cycles happens before the Red phase of a bigger cycle, i.e. small building blocks are developer first, then higher-level functionality is specified (Red) and implemented
 using the already built small components (Green).
 
 ```
-# Bottom-up classicist TDD 
+# Middle out/bottom up classical TDD 
 (red->green->refactor) RED -> GREEN -> REFACTOR
 ```
 
@@ -645,14 +652,14 @@ RED (red->green->refactor) -> GREEN -> REFACTOR
 
 Mockist TDD practitioners do one cycle after another. Once the top-level class is finished and dependencies mocked, they go level down and repeat the process. It like searching the graph-type approach.
 They can Mock dependencies immediately, or they can change their mind later and extract already existing logic into a separate class that they can replace with a Mock and use instead of the actual logic.
-The tend to think about the design quite early and try to be right the first time. The have to, as refactoring with all those Mocks around is far less pleasant than in the state-based testing (Classical TDD). 
+The tend to think about the design quite early and try to be right the first time. The have to, as refactoring with all those Mocks around is far less pleasant than in the state-based testing (classic TDD). 
 
 ```
 # Mockists TDD practitioners 
-RED -> (mock dependencies) GREEN -> RED -> GREEN (mock dependencies)
+RED -> (mock dependencies) GREEN -> RED -> GREEN -> REFACTOR (extract logic and mock dependencies)
 ```
 
-Developer that know more that one flavor of TDD can obviously jump from one to another, case by case. The problem with jumping is that some of tests will still fail during the Refactoring step (those with Mocked dependencies)
+Developer that know more than one flavor of TDD can obviously jump from one to another, case by case. The problem with jumping is that some of tests may still fail during the Refactoring step (those with Mocked dependencies)
 and that we have to remember to create some additional end to end tests with real dependencies for the classes we developed with Mockist TDD approach. If you forget to create them, your system may not work at all
 although all your tests are green. We definitely don't want to be there. 
 
@@ -660,15 +667,15 @@ although all your tests are green. We definitely don't want to be there.
 ## It's all about confidence
 
 If you do Continuous Delivery, a successful build with all the tests Green switches the 'Deploy' button on. This button can be then pressed by someone in charge to deploy it to production.
-If you do Continuous Deployment, there is even no need for the 'Deploy' button.. If you don't have enough confidence to promise any of that, you are not there yet.
+If you do Continuous Deployment, there is no need for the 'Deploy' button, as it can be deployed automatically. If you don't have enough confidence to promise any of that, you are not there yet.
 In our case, whenever all the tests are Green and we are happy with the scope delivered so far, we can deploy our Diamond app to production. At the moment, all we know is
 that it works fine for letter A and B, but we know nothing about the rest of the alphabet. 
 
-Testing can only prove the presence of or absence of some, but not all, bugs. In our case, testing only two cases is clearly not enough. So far, our tests are example-based tests, not property-based tests.
+Testing can only prove the absence of some, but not all, bugs. In our case, testing only two cases is clearly not enough. So far, our tests are example-based tests, not property-based tests.
 Those testing strategies are not mutually exclusive and one can support another.
 When we do property-based testing, we need to verify sufficient number of properties, so that we know that for each input there will be a correct output produced.
 When we test using examples, we need to be sure that there are enough examples that implicitly test all the properties we care about and that we can extrapolate assumptions based on limited examples to be confident
-that our software will produce correct outputs regardless of the input. I would be much more confident if I proved that Diamond produces correct output with more than two letters.
+that our software will produce correct outputs regardless of the input. I would be much more confident if I proved that Diamond produces correct output for more than two cases.
 
 I could test the case with the letter Z. It would give me a lot of confidence. I am planning to do it when the feature is ready, as a confirmation that the solution is generic enough
 to produce correct result even for complex cases. However, as the feature is still under development, I will pick the cases that does not turn my refactoring efforts into nightmare - just enough
@@ -797,7 +804,7 @@ public class Layout {
 }
 ```
 
-Having implemented calculating top left and top right y coordinate of the letters, I can now delegate this to the newly implemented class.
+Having implemented calculating top left and top right y coordinate of the letters, I can now delegate this responsibility to the newly implemented class.
  
 ```java
 public class Diamond {
@@ -836,7 +843,7 @@ We have just finished the first small cycle of the bigger Refactoring step. [Let
 I think this is the focal point of this blog and a stark example of the power of this flavor of TDD. We reached the point when we are able to extract the logic piece by piece,
 maintaining the small Red Green Refactor steps. The refactoring is not only possible, but it is almost enforced as it is the only reasonable way to progress. On top of that,
 we refactor the code that already works, so all our efforts won't be wasted. The refactoring step has been postponed just enough to make an informed decision on what kind of refactoring makes sense and supports the final solution.
-If you compare it to the Mockists TDD refactoring, that is done way before we have a working solution, and with bottom-up Classicist TDD where we are not sure if all the classes we create will be useful at all,
+If you compare it to the Mockists TDD refactoring, that is done way before we have a working solution, and with middle out/bottom up Classical TDD where we are not sure if all the classes we create will be useful at all,
 you can clearly see the benefits. 
 
 ## Minimal Viable Product
@@ -845,7 +852,7 @@ Let's pretend that we run out of time and money (after 10 minutes, I know, tough
 we think that already supported letters A, B and C account to roughly 10% of the use cases. Instead of waiting, let's produce some diamonds, earn some money and collect some feedback!
 Business is fine with rejecting requests for diamonds with letters other than A,B or C until they are implemented. We are happy to deploy the existing version as MVP. 
 
->Meanwhile in the bottom-up Classicist TDD camp...
+>Meanwhile in the middle out/bottom up Classical TDD camp...
 >
 >-Dev: "We have some classes already implemented, but we are not ready yet to create a Diamond class"
 >
@@ -868,16 +875,16 @@ Business is fine with rejecting requests for diamonds with letters other than A,
  
 
 They are of course just a humorous stories and reality is never as simple as that. However, it highlights very important quality of the approach we took, namely, that we always focus on
-the end goal and try to achieve it as quickly as possible. We do it incrementally, so that the progress can be actually measured and we we think we are 80% done, we probably are.
+the end goal and try to achieve it as quickly as possible. We do it incrementally, so that the progress can be actually measured and if we we think we are 80% done, we probably are.
 This is due not only to the fact that we implement working (as opposed to mocked) software outside-in, but also to the preparatory work (described in one of first chapters of this blog), that addressed the highest risks first.
 If you read my other blog posts, e.g. about Specification by Example, you can notice the same pattern applied at various levels of abstraction. It allows you to measure the progress both on a macro- and a micro-scale.
  
-## Keep calm and carry on with TDD
+## Keep calm and TDD
 
 Next steps are quite obvious. We replace one by one each of the hardcoded coordinates, making the code more and more generic.
 
 We noticed that there is only one y coordinate for each top letter, regardless of the left-ness or right-ness of them. We were Green, so we were able to refactor it.
-We then followed with created the next test demanding calculating y coordinates of bottom letters. We had to hold our horses, having realised that the y coordinates of bottom letter depend not only
+We then followed with creating the next test demanding calculating y coordinates of bottom letters. We had to hold our horses though, having realised that the y coordinates of bottom letter depend not only
 on the letter in question, but also on the letter used as an input. In other words, the stateless, immutable Layout became an immutable, but stateful one.
 
 ```
@@ -932,7 +939,8 @@ class LayoutShould extends Specification {
 
 Although we now instantiate Layout passing the last letter in the diamond `Layout.forLastLetterBeing(Letter.C)`, this is irrelevant for the first test, therefore
 we hide this detail behind the method `def layout = layout()`. When testing, we should try to hide all the implementation details irrelevant for the outcome of the test,
-and make explicit all detail that are relevant. This approach makes the test understandable, [keeping cause and effect clear](https://testing.googleblog.com/2017/01/testing-on-toilet-keep-cause-and-effect.html)
+and make explicit all details that are relevant. This approach makes the test understandable, [keeping cause and effect clear](https://testing.googleblog.com/2017/01/testing-on-toilet-keep-cause-and-effect.html)
+(funny enough, I later accidentally inlined it again, but luckily the test is small enough to pose no challenge in understanding it - this rule of the least knowledge is especially useful when we have more than one input that affects output).
 
 We are ready to demand more from the Layout - to calculate y coordinates of the bottom letters. In this case the last letter is important, so we make this explicit.
  
@@ -1036,7 +1044,6 @@ of the letters forming the left hand side of the diamond has been calculated as 
 
 If the x coordinate of the left letter was a difference, the x coordinate of the right letter is a sum of the maximum and given letter,
 which was implemented in the [subsequent commit](https://github.com/michaelszymczak/blog-support/commit/fe3bb6271db0a50b98ba411571921e3614577dd2). 
-I also unnecessarily inlined the test fixtures of the 'let the top letter to be in ordinal number distance from the top', but luckily the test is small enough to still pose no challenge in understanding it.
 
 At this stage, all of the coordinates are calculated automatically and the Diamond implementation looks as follows.
 
@@ -1111,7 +1118,7 @@ Similarly to the physicists searching for the [Theory of everything](https://en.
 annoying 'if (large-scale and high-mass) then apply general relativity, if (small scale and low mass) then apply quantum field theory' if statement,
 we will try to find the Theory of every letter for our Diamond. 
 
-I was looking at the diamond shapes and on the if statements, when the 'aha' moment happened. What if the diamond shape is just a projection of letters onto the two-dimensional space,
+I was looking at the diamond shapes and at the if statements, when the 'aha' moment happened. What if the diamond shape is just a projection of letters onto the two-dimensional space,
 and each letter, like in a kaleidoscope, occurs several times. Four times, to be precise, no ifs, no buts. The thing is that some of the letters are projected on top of each other, covering
 the one being underneath. Even letter 'A' in A-diamond occurs four times. All of them in the same place, that is why we can see only one 'A'.
 
@@ -1119,5 +1126,8 @@ the one being underneath. Even letter 'A' in A-diamond occurs four times. All of
 A <- 4 letters A with coordinates: (0,0), (0,0), (0,0), (0,0)
 ```
 
-Any serious theoretical physicist, after coming up with new hypothesis, rigorously uses matematical aparatus to prove it. They have to be disciplined, not to make any mistakes that can invalidate their attempts.
-Any serious developer, after coming up with new hypothesis, verifies it in a disciplined manner. TDD (done right) is a great and practical tool that makes this verification possible. 
+Any serious theoretical physicist, after coming up with new hypothesis, rigorously uses matematical aparatus to prove it.
+Experimentalists, on the other hand, tend to conduct a series of experiments to discover new features, or to support or discard the existing hypothesis.
+Both of them have to be disciplined, not to make any mistakes that can render their efforts useless.
+Along the same lines, any serious developer, after coming up with new hypothesis, examine it thoroughly. TDD (done right) is a great and practical tool that makes this verification possible.
+Scientists wish they had access to such controlled environment, when all experiments are repeatable - appreciate it and treat you tests with respect. 
