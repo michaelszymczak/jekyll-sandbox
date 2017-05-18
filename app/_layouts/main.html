@@ -28,7 +28,14 @@
 
 
     {% include scripts.html %}
-    {% include googleanalytics.html %}
+
+    {% if jekyll.environment == 'production' %}
+      <!-- Production env -->
+      {% include googleanalytics.html %}
+    {% else %}
+      <!-- Non-production env -->
+    {% endif %}
+
 
   </body>
 </html>

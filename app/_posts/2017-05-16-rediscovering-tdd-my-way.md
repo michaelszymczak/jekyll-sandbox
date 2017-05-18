@@ -2,7 +2,7 @@
 layout: post
 title:  "Rediscovering TDD - My favourite flavour of TDD"
 category: software
-tags: ["software-craftsmanship", "tdd", "test-driven-development"]
+tags: ["software-craftsmanship", "tdd", "test-driven-development", "java", "spock", "groovy"]
 ---
 
 <p class="excerpt">
@@ -81,7 +81,7 @@ It obviously does not need to be done in one go, but rather on an ad-hoc basis a
 
 ### Clarifying requirements
 
-Sometimes we have no idea what to build. In this case, refine the requirement using techniques such as Specification By Example @llink. Draw pictures, talk with stakeholders,
+Sometimes we have no idea what to build. In this case, refine the requirement using techniques such as [Specification By Example]({% post_url 2013-12-23-specification-by-example %}). Draw pictures, talk with stakeholders,
 do whatever it takes to get it. The technique I use most often is paraphrasing and writing some examples. It highlights the discrepancies between my understanding and the actual requirements.
 
 ### Spiking a solution
@@ -102,8 +102,8 @@ and re-use in the new design.
  
 ### Sketching and modeling 
  
-If the domain or the problem itself is non-trivial, it may be advisable to think about the design beforehand. There are various techniques you can apply, such as @link https://en.wikipedia.org/wiki/Class-responsibility-collaboration_card
-or https://en.wikipedia.org/wiki/Domain-driven_design . If you are confident that TDD and its feedback loop alone is sufficient for the problem in hand and you have proven track of implementing clean solutions
+If the domain or the problem itself is non-trivial, it may be advisable to think about the design beforehand. There are various techniques you can apply, such as [CRC cards](https://en.wikipedia.org/wiki/Class-responsibility-collaboration_card)
+or [DDD](https://en.wikipedia.org/wiki/Domain-driven_design). If you are confident that TDD and its feedback loop alone is sufficient for the problem in hand and you have proven track of implementing clean solutions
 using TDD, you most probably know how just-enough design should look like in this context.
  
 ### Design and implementation phase 
@@ -123,13 +123,13 @@ for the sub-problem and applying a series of trivial transformations (that you c
 The first approach I tried was the Classical TDD. When you see some examples of Classical TDD, the smooth transitions are achieved by doing it middle out, or bottom up - smaller chunks are implemented first
 and the final solution is created by making use of just created components. There is a catch though - I want the approach to be outside-in, so that we are sure that we solve the right problem.
 It means that we should start with the test that is as close to the original requirement as possible.
-In that sense, it is closer to what some describe as BDD @link, but for me the **outside-in approach is the most cost-effective one, as existence of each piece of logic is justified by some requirement**.
+In that sense, it is closer to what some describe as [BDD](https://en.wikipedia.org/wiki/Behavior-driven_development), but for me the **outside-in approach is the most cost-effective one, as existence of each piece of logic is justified by some requirement**.
 If each piece of logic is justified by requirements, there is no un-justified code, that costs time and money, bringing no value. Compare it to the middle out/bottom up approach, when we may end up creating
 some unnecessary code that, in the best case, will be thrown away or, in the worst case, we will try to keep 'just for case' or use somewhere because we can't admit that we wasted time writing it in a first place.
  
-Quick pace and outside-in approach are two benefits of the Mockist TDD @link . You may think that I should simply use this approach then. There is another catch though. I believe that mocks should be used
+Quick pace and outside-in approach are two benefits of the [Mockist TDD (scroll to 'Outside-In' section)](https://codurance.com/2015/05/12/does-tdd-lead-to-good-design/) . You may think that I should simply use this approach then. There is another catch though. I believe that mocks should be used
 as a last resort and excessive use of mocks is an anti-pattern. By Mocks I mean mocked subset of class API, such as ```Mockito.when(query.executeQuery()).thenReturn(rs);```.
-Why this is a bad idea deserves a separate blog post. If you are one of the Mockist TDD practitioners and wonder why sometimes when you refactor the production code many tests turn red, even though the solution
+Why this is a bad idea deserves a separate blog post. If you are one of the [Mockist TDD practitioners](https://martinfowler.com/articles/mocksArentStubs.html#ClassicalAndMockistTesting) and wonder why sometimes when you refactor the production code many tests turn red, even though the solution
  is still correct; or worse even, when while refactoring you introduced a bug but all of them are still green - you know what I mean. It is so common, that you may even have convinced yourself that it is OK to
 refactor on Red, and this gambling is a price that you are willing to pay for the sake of a better design. There is a reason why mock-based tests panic or stay calm when the shouldn't though - they are not real,
  they only pretend that they know what to do. **A mock is like an incompetent teacher that fails a student if their answer differs from the one found in the answer-key, despite of being correct.**
@@ -1191,7 +1191,7 @@ public class Diamond {
 
 Don't worry, it's OK to introduce slightly more code if it makes the future refactoring easier and helps to spot some patterns.
 As this was a Refactoring step, let's run all the tests to see if they are still Green. They are, which means that our hypothesis was
-most probably right, so [a commit is in place](https://github.com/michaelszymczak/blog-support/commit/52368faedd3e9973c7de2da5f980386a080cc2e3).
+most probably right, so [a commit is in order](https://github.com/michaelszymczak/blog-support/commit/52368faedd3e9973c7de2da5f980386a080cc2e3).
 
 ## On man's Refactoring is another man's full TDD cycle
  
@@ -1254,5 +1254,212 @@ steps for a while, doing just-enough, just-in-time design as you go.
   v   
 
 ```
+
+
+## Finish it
+
+The Diamond class has been expanded for a reason. We observed that each letter occurs four times,
+but some of them overlap. Layout class has everything it needs to calculate position for all of them.
+
+We are in the big cycle of Diamond's Refactoring, starting the new small TDD cycle for the Layout class.
+ 
+```groovy
+class LayoutShould extends Specification {
+  // ...
+  def "generate coordinates for each letter based on last letter"() {
+    expect:
+    forLastLetterBeing(A).positioned(A) == [new PositionedLetter(ofYX(0,0), A)] as Set
+    forLastLetterBeing(B).positioned(A) == [
+            new PositionedLetter(ofYX(0,1), A),
+            new PositionedLetter(ofYX(2,1), A)
+    ] as Set
+    forLastLetterBeing(B).positioned(B) == [
+            new PositionedLetter(ofYX(1,0), B),
+            new PositionedLetter(ofYX(1,2), B)
+    ] as Set
+    forLastLetterBeing(C).positioned(B) == [
+            new PositionedLetter(ofYX(1,1), B), new PositionedLetter(ofYX(1,3), B),
+            new PositionedLetter(ofYX(3,1), B), new PositionedLetter(ofYX(3,3), B),
+    ] as Set
+  }
+}
+```
+
+Green turned into Red, but within couple of seconds it becomes Green again when we copy
+the logic from Diamond to the Layout class.
+
+```java
+package com.michaelszymczak.diamond;
+
+import com.google.common.collect.ImmutableSet;
+
+import java.util.Set;
+
+import static com.michaelszymczak.diamond.Coordinates.ofYX;
+import static com.michaelszymczak.diamond.Letter.A;
+
+public class Layout {
+  // ...
+  public Set<PositionedLetter> positioned(Letter letter) {
+    return ImmutableSet.of(
+            new PositionedLetter(ofYX(yOfTop(letter),xOfLeft(letter)), letter),
+            new PositionedLetter(ofYX(yOfTop(letter),xOfRight(letter)), letter),
+            new PositionedLetter(ofYX(yOfBottom(letter),xOfLeft(letter)), letter),
+            new PositionedLetter(ofYX(yOfBottom(letter),xOfRight(letter)), letter)
+    );
+  }
+}
+```
+
+Last step of Diamond class refactoring ends this small TDD cycle.
+
+```java
+public class Diamond {
+  // ...
+  public String rendered() {
+    if (letter == A)
+    {
+      return new Board(Layout.forLastLetterBeing(A).positioned(A)).toString();
+    }
+    if (letter == B)
+    {
+      Layout layout = Layout.forLastLetterBeing(B);
+      return new Board(new ImmutableSet.Builder<PositionedLetter>()
+              .addAll(layout.positioned(A))
+              .addAll(layout.positioned(B))
+              .build()
+      ).toString();
+    }
+
+    Layout layout = Layout.forLastLetterBeing(C);
+    return new Board(new ImmutableSet.Builder<PositionedLetter>()
+            .addAll(layout.positioned(A))
+            .addAll(layout.positioned(B))
+            .addAll(layout.positioned(C))
+            .build()
+    ).toString();
+
+  }
+}
+```
+
+The full commit can be viewed [here](https://github.com/michaelszymczak/blog-support/commit/b66b302f6a5b19e96687a31515de3f7867518943)
+
+
+The Diamond class has clearly one more responsibility that can be moved somewhere else. It decides which letters
+should be rendered based on the input letter. We start the next small TDD cycle with the Letter.
+
+```groovy
+class LetterShould extends Specification {
+  // ...
+  def "return all letters up to the specified one"() {
+    expect:
+    A.inclusiveSequence() == [A]
+    B.inclusiveSequence() == [A,B]
+    D.inclusiveSequence() == [A,B,C,D]
+  }
+}
+```
+
+Red.
+
+```java
+public enum Letter {
+  // ...
+  public List<Letter> inclusiveSequence() {
+    return Stream.of(values())
+            .filter(l -> l.ordinal() <= ordinal())
+            .sorted((l1, l2) -> Integer.compare(l1.ordinal(), l2.ordinal()))
+            .collect(Collectors.toList());
+  }
+}
+```
+
+Green
+
+```java
+public class Diamond {
+  // ...
+  public String rendered() {
+    return new Board(allPositionedLetters()).toString();
+  }
+
+  private List<PositionedLetter> allPositionedLetters() {
+    final Layout layout = Layout.forLastLetterBeing(letter);
+
+    return letter.inclusiveSequence().stream()
+            .flatMap(l -> layout.positioned(l).stream())
+            .collect(Collectors.toList());
+  }
+}
+```
+
+Refactor.
+
+After adding all the supported characters to the Letter, it seems that the feature is ready, it's time to verify it.
+
+```groovy
+class DiamondAcceptanceTest extends Specification {
+  // ...
+  def "uses all letters if possible"() {
+    expect:
+    Diamond.of(Letter.Z).rendered() == "" +
+            "                         A                         " + "\n" +
+            "                        B B                        " + "\n" +
+            "                       C   C                       " + "\n" +
+            "                      D     D                      " + "\n" +
+            "                     E       E                     " + "\n" +
+            "                    F         F                    " + "\n" +
+            "                   G           G                   " + "\n" +
+            "                  H             H                  " + "\n" +
+            "                 I               I                 " + "\n" +
+            "                J                 J                " + "\n" +
+            "               K                   K               " + "\n" +
+            "              L                     L              " + "\n" +
+            "             M                       M             " + "\n" +
+            "            N                         N            " + "\n" +
+            "           O                           O           " + "\n" +
+            "          P                             P          " + "\n" +
+            "         Q                               Q         " + "\n" +
+            "        R                                 R        " + "\n" +
+            "       S                                   S       " + "\n" +
+            "      T                                     T      " + "\n" +
+            "     U                                       U     " + "\n" +
+            "    V                                         V    " + "\n" +
+            "   W                                           W   " + "\n" +
+            "  X                                             X  " + "\n" +
+            " Y                                               Y " + "\n" +
+            "Z                                                 Z" + "\n" +
+            " Y                                               Y " + "\n" +
+            "  X                                             X  " + "\n" +
+            "   W                                           W   " + "\n" +
+            "    V                                         V    " + "\n" +
+            "     U                                       U     " + "\n" +
+            "      T                                     T      " + "\n" +
+            "       S                                   S       " + "\n" +
+            "        R                                 R        " + "\n" +
+            "         Q                               Q         " + "\n" +
+            "          P                             P          " + "\n" +
+            "           O                           O           " + "\n" +
+            "            N                         N            " + "\n" +
+            "             M                       M             " + "\n" +
+            "              L                     L              " + "\n" +
+            "               K                   K               " + "\n" +
+            "                J                 J                " + "\n" +
+            "                 I               I                 " + "\n" +
+            "                  H             H                  " + "\n" +
+            "                   G           G                   " + "\n" +
+            "                    F         F                    " + "\n" +
+            "                     E       E                     " + "\n" +
+            "                      D     D                      " + "\n" +
+            "                       C   C                       " + "\n" +
+            "                        B B                        " + "\n" +
+            "                         A                         "
+  }
+}
+```
+
+After [committing the changes](https://github.com/michaelszymczak/blog-support/commit/169792fb3a003f46f991007097d22b4aebf79e71) and
+[doing some cleanup](https://github.com/michaelszymczak/blog-support/commit/8da449a27a1ae385f655a557e8e81f3a9ad3441f) we are done.
 
 
