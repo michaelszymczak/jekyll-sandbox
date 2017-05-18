@@ -40,6 +40,8 @@ Builds an optimized site to the dist directory. [Usemin blocks](https://github.c
 
 `grunt serve:dist` will run `grunt build` and open the result in your default browser
 
+To build to publish, execute with the right flag. `JEKYLL_ENV=production grunt build`
+
 #### grunt deploy
 
 During scaffolding the generator gives you the option to configure [grunt-build-control](https://github.com/robwierzbowski/grunt-build-control) to version and deploy your built code to a remote repository. If you configure build-control, `JEKYLL_ENV=production grunt deploy` will run `grunt check`, `grunt test`, `grunt build`, and then commit and deploy your built code to the specified remote repository. 
