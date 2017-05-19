@@ -2,7 +2,7 @@
 layout: post
 title:  "Rediscovering TDD - My favourite flavour of TDD"
 category: software
-tags: ["software-craftsmanship", "tdd", "test-driven-development", "java", "spock", "groovy"]
+tags: ["software-craftsmanship", "tdd", "test-driven-development", "java", "java8", "spock", "groovy"]
 ---
 
 <p class="excerpt">
@@ -11,7 +11,7 @@ It is an advanced TDD blog post in a sense that in order to appreciate it fully,
 of some shortcomings when picking either classic or mockist approach etc. At the same time, this blog should be understood even by beginners
 as this is yet another way of doing TDD. Nothing prevents a person that has never tried TDD to apply this particular approach, even if they
 do not know the difference between above mentioned classical and mockist TDD. In fact, I think that the industry as a whole would
-be much better of if the first style of TDD that newcomers come across was the one presented here.
+be much better off if the first style of TDD that newcomers come across was the one presented here.
 </p>
 <span class="readmore"/>
 
@@ -53,7 +53,7 @@ not test-driven, as each test should drive the implementation. TDD is a fine-gra
 constantly listening to the feedback and as soon as you realise that the solution is not fit for purpose, you stop and change the direction,
 or refactor to allow yourself to take another path.
 
-The challenge is to make this happen - to **find a path from red to green to refactor, spending on each step no more that a minute or so**.
+The challenge is to make this happen - to **find a path from red to green to refactor, spending on each step no more than a minute or so**.
 On top of that, you have to **repeat this sequence time and time again until you solve the problem**.
  
 > If you had to spend no more than one minute on each step and at the same time deliver a fully working, correct solution, that would 
@@ -87,7 +87,7 @@ do whatever it takes to get it. The technique I use most often is paraphrasing a
 ### Spiking a solution
 
 You may also not be clear if you are able to build it - the right library may not exists, vendor's API is poorly documented etc. In this case, you should probably start with spike, hacking your way as you go.
-You will test this solution picking the cheapest and quickest way, which is ofter manual testing or some ad-hoc created test with questionable design. Once you found the solution, ~~you deploy it and go home~~,
+You will test this solution picking the cheapest and quickest way, which is often manual testing or some ad-hoc created test with questionable design. Once you found the solution, ~~you deploy it and go home~~,
 you establish boundaries allowing you to quickly create an end to end test automatically verifying that the solution still works. At this point the outcome may be one of the following.
 
  - Case A - I didn't even bother to do a spike as I am already confident that technology is not a problem.
@@ -124,7 +124,7 @@ The first approach I tried was the Classical TDD. When you see some examples of 
 and the final solution is created by making use of just created components. There is a catch though - I want the approach to be outside-in, so that we are sure that we solve the right problem.
 It means that we should start with the test that is as close to the original requirement as possible.
 In that sense, it is closer to what some describe as [BDD](https://en.wikipedia.org/wiki/Behavior-driven_development), but for me the **outside-in approach is the most cost-effective one, as existence of each piece of logic is justified by some requirement**.
-If each piece of logic is justified by requirements, there is no un-justified code, that costs time and money, bringing no value. Compare it to the middle out/bottom up approach, when we may end up creating
+If each piece of logic is justified by requirements, there is no unjustified code, that costs time and money, bringing no value. Compare it to the middle out/bottom up approach, when we may end up creating
 some unnecessary code that, in the best case, will be thrown away or, in the worst case, we will try to keep 'just for case' or use somewhere because we can't admit that we wasted time writing it in a first place.
  
 Quick pace and outside-in approach are two benefits of the [Mockist TDD (scroll to 'Outside-In' section)](https://codurance.com/2015/05/12/does-tdd-lead-to-good-design/) . You may think that I should simply use this approach then. There is another catch though. I believe that mocks should be used
@@ -180,7 +180,7 @@ If you look at the reason why someone even considered taking the rewriting appro
 - going straight to the final solution is too risky with too many intermediate steps skipped, but
 - requirements expressed by the intermediary steps contradict the final solution, i.e. all tests cannot be green at the same time
 
-If we manage to fix the latter, we will be able to keep all the tests and solve the problem incrementally. Easier said then done, but the very blog
+If we manage to fix the latter, we will be able to keep all the tests and solve the problem incrementally. Easier said than done, but the very blog
 post you are reading was created to help you to achieve exactly that. Keep reading.
 
 # TDD - my way
@@ -225,7 +225,7 @@ class DiamondAcceptanceTest extends Specification {
 }
 ```
 
-I run all the tests (only one at the moment) - it's Red,  so wee need to introduce just enough production code to make it pass, and do it quickly!
+I run all the tests (only one at the moment) - it's Red,  so we need to introduce just enough production code to make it pass, and do it quickly!
 
 For back-end production code, I usually use Java 8, as in some cases performance predictability is more important than flexibility. It is also much easier achieve a productivity boost and to convince
 a company or a team to use Spock with Groovy if it does not require changing the production stack.
@@ -377,7 +377,7 @@ The approach I want to show you is, in my opinion, slightly simpler to apply, an
 
 As I mentioned earlier, all the tests I have already wrote should stay Green and acceptance tests are no exception. I can't simply add more and more if statements, so now is the right time to think about the overall design.
 It's clear that in order to progress, some refactoring is necessary. I noticed that I struggled, because the Diamond class has too many responsibilities. The responsibilities are hidden behind the simple output string,
-but if you look closely at you thought process when you reason about the solution, you can discover, that you:
+but if you look closely at your thought process when you reason about the solution, you can discover, that you:
 
 - make sure that the right letters are present
 - calculate the positions of each letter
@@ -424,7 +424,7 @@ The design above would enable Diamond to delegate one of the responsibilities, n
 are still responsibilities of the Diamond class. However, because we don't have Board class yet, in order to keep all the tests Green we can't use this design yet.
 
 The difference between the current and desired design should be small, and you should be confident that it can be easily achieved, ideally in one TDD cycle.
-The one presented above is slightly to big to achieve it in one go, so I will split it into more steps. Let's achieve something smaller first. My achievable desired design is the following.
+The one presented above is slightly too big to achieve it in one go, so I will split it into more steps. Let's achieve something smaller first. My achievable desired design is the following.
 
 ```java
 public class Diamond {
@@ -635,7 +635,7 @@ RED -> GREEN -> (red->green->refactor) REFACTOR
 ```
 
 In the light of big and small cycles, my approach differs from middle out/bottom up classic TDD in a sense that small Red-Green-Refactor cycles are part of a Refactor phase in a bigger cycle, whereas in middle out/bottom up
-classical TDD small Red-Gree-Refactor cycles happens before the Red phase of a bigger cycle, i.e. small building blocks are developer first, then higher-level functionality is specified (Red) and implemented
+classical TDD small Red-Green-Refactor cycles happens before the Red phase of a bigger cycle, i.e. small building blocks are developer first, then higher-level functionality is specified (Red) and implemented
 using the already built small components (Green).
 
 ```
@@ -656,7 +656,7 @@ They can Mock dependencies immediately, or they can change their mind later and 
 The tend to think about the design quite early and try to be right the first time. The have to, as refactoring with all those Mocks around is far less pleasant than in the state-based testing (classic TDD). 
 
 ```
-# Mockists TDD practitioners 
+# Mockist TDD practitioners 
 RED -> (mock dependencies) GREEN -> RED -> GREEN -> REFACTOR (extract logic and mock dependencies)
 ```
 
@@ -857,7 +857,7 @@ Business is fine with rejecting requests for diamonds with letters other than A,
 >
 >-Dev: "We have some classes already implemented, but we are not ready yet to create a Diamond class"
 >
->-Product Owner: "OK, what if we cut the scope and release only A adn B diamonds, without C?"
+>-Product Owner: "OK, what if we cut the scope and release only A and B diamonds, without C?"
 >
 >-Dev to other Dev: "He doesn't get it, does he?"
  
@@ -884,7 +884,7 @@ If you read my other blog posts, e.g. about Specification by Example, you can no
 
 Next steps are quite obvious. We replace one by one each of the hardcoded coordinates, making the code more and more generic.
 
-We noticed that there is only one y coordinate for each top letter, regardless of the left-ness or right-ness of them. We were Green, so we were able to refactor it.
+We noticed that there is only one y coordinate for each top letter, regardless of the leftness or rightness of them. We were Green, so we were able to refactor it.
 We then followed with creating the next test demanding calculating y coordinates of bottom letters. We had to hold our horses though, having realised that the y coordinates of bottom letter depend not only
 on the letter in question, but also on the letter used as an input. In other words, the stateless, immutable Layout became an immutable, but stateful one.
 
@@ -1101,7 +1101,7 @@ public class Diamond {
 Hey, edge case, you are not special. You're not a beautiful and unique snowflake. Whenever I see an if, I see an opportunity
 to discover something deeper about the problem I am solving. Ideally, the solution should be applicable
 to all the cases, even the edge ones. Edge cases are not inherently special. They simply make great test fixtures.
-Let's look a the diamond shape again.
+Let's look at the diamond shape again.
 
 ```
    A
