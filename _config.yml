@@ -3,9 +3,11 @@
 # 2. config.build.yml
 # 3. config.yml
 
+source: ./app
 name: Michael Szymczak
 description: Pursuing excellence in software development
 url: http://www.michaelszymczak.com
+baseurl: ""
 author:
   name: Michael Szymczak
   email: contact@michaelszymczak.com
@@ -19,24 +21,8 @@ include: ['.htaccess']
 # _config.build.yml sets future and show_drafts to false on `grunt build`
 future: true
 show_drafts: true
-
 permalink: article/:title.html
-paginate: 10
-paginate_path: 'page:num'
 
-excerpt_separator: <span class="readmore"/>
+gems:
+  - jekyll-bower
 
-markdown: kramdown
-
-kramdown:
-  input: GFM
-  hard_wrap: false
-  syntax_highlighter: rouge
-  syntax_highlighter_opts:
-    block:
-      line_numbers: true
-
-gems: [jekyll-paginate, jekyll-gist]
-
-gist:
-  noscript: true

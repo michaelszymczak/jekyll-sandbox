@@ -137,8 +137,7 @@ module.exports = function (grunt) {
     },
     jekyll: {
       options: {
-        config: '_config.yml,_config.build.yml',
-        src: '<%= yeoman.app %>'
+        config: '_config.yml,_config.build.yml'
       },
       dist: {
         options: {
@@ -271,23 +270,22 @@ module.exports = function (grunt) {
     },
     jshint: {
       options: {
-        jshintrc: '.jshintrc',
-        reporter: require('jshint-stylish')
+        reporter: require('jshint-stylish'),
+        reporterOutput: ""
       },
       all: [
-        'Gruntfile.js',
         '<%= yeoman.app %>/js/**/*.js',
         'test/spec/**/*.js'
       ]
     },
     csslint: {
       options: {
-        csslintrc: '.csslintrc'
       },
       check: {
-        src: [
-          '<%= yeoman.app %>/css/**/*.css'
-        ]
+        src: []
+        //src: [
+        //  '<%= yeoman.app %>/css/**/*.css'
+        //]
       }
     },
     // https://github.com/robwierzbowski/generator-jekyllrb/issues/106
