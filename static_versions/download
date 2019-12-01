@@ -1,0 +1,4 @@
+#!/bin/bash
+
+aws s3 cp --recursive s3://www.michaelszymczak.com `date '+%Y%m%d'` && zip -r `date '+%Y%m%d'`.zip `date '+%Y%m%d'` && rm -rf `date '+%Y%m%d'`
+

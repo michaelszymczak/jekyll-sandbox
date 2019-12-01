@@ -22,15 +22,6 @@ Thumbs.db
 ._*
 *~
 
-# Ignore packages #
-*.7z
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.zip
 
 # Ignore for Yeoman-Jekyll projects #
 app/_bower_components
