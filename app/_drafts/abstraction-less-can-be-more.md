@@ -5,6 +5,12 @@ category: software
 tags: ["software", "design", "software-design", "java"]
 ---
 
+<p class="excerpt">
+When it comes to abstractions, less can be more and the trade-offs you need to make may not be the ones you think.
+<p>
+
+
+
 ```bash
 $ echo "foo" > input.txt && \
   less input.txt > a && \
@@ -19,7 +25,7 @@ same
 
 On a more serious note, see the java code below. 
 
-This post is is a continuation of the [previous post](2020-04-13-are-you-imperator) post, so read it first.
+By the way, this post is a continuation of the [previous post](2020-04-13-are-you-imperator) post, so it would be beneficial to read it first.
 
 What can you say about the method doThings() - "is it something" or does it "do something"?
 
@@ -81,7 +87,7 @@ from the thingsToDo() function. ThingsToDo is not only "a thing". It is also an 
 
 ## An abstraction
 
-The common agreement is that an abstraction **hides something**. Another purpose of an abstraction is that it **represents a concept**. To be more precise, it **provides a perspective** trhorugh which
+The common agreement is that an abstraction **hides something**. Another purpose of an abstraction is that it **represents a concept**. To be more precise, it **provides a perspective** through which
 two things, although different, look the same. 
 
 The `ThingsToDo` abstraction:
@@ -95,8 +101,8 @@ The `ThingsToDo` abstraction:
 I will discuss the difference between a perspective and the notion of hiding in more details later.
 
 
-How abstract is this abstraction? It's pretty abstract in a sense that the method `void doCarefully(ThingsToDo thingsToDo)` has absolutly no idea what it is about to do.
-We hid everything apart the fact that there is something to be done. 
+How abstract is this abstraction? It's pretty abstract in a sense that the method `void doCarefully(ThingsToDo thingsToDo)` has absolutely no idea what it is about to do.
+We hid everything apart from the fact that there is something to be done. 
 
 Making things more abstract
 
@@ -140,7 +146,7 @@ class Main {
 
 if you look at the implementation of the `doThings()` method, the doCarefully method has no problem with accepting more things to do although it did not about them earlier.
 The order of returning values (fun things before important things) has no effect over the order of execution (important things are done first). It is because by following **declarative
-style order of execution is decoupled from the things to execute**. This is yet another compelling reason to use this style over imperative style when other concerns, such as readability and modeling the domain are important factors that affect the code layout. In **imperative style** the **code layout is contrained by the order in which you want side effects to occurr**.
+style order of execution is decoupled from the things to execute**. This is yet another compelling reason to use this style over imperative style when other concerns, such as readability and modeling the domain are important factors that affect the code layout. In **imperative style** the **code layout is constrained by the order in which you want side effects to occurr**.
 
 ## Introduction of an abstraction
 
@@ -162,7 +168,7 @@ interface Task
 You can still do ThingsToDo, but now you can also return a list of tasks the ThingsToDo involve. By extending Task we automatically include their methods, so `void doIt();` declaration in ThingsToDo
 is actually redundant now - it overrides a method with the same method, so this line can be deleted - I just left it to show that I did not remove anything from the ThingsToDo abstraction. All I did was adding one more method and adding one more abstraction - a Task.
 
-Another question for you. I just added one more abstration. From a ThingsToDo client's perspective (such as doCarefully method), did I make the code more or less abstract? The answer is - I made it **less** abstract. Is it a joke? Not really, as I actually revealed more information about what is to be done. I stopped hiding certain implementation details, such as how many distinct thing is to be done. Does the client have to do anything with this additional information? Absolutely not! Look at the 3 clients below.
+Another question for you. I just added one more abstraction. From a ThingsToDo client's perspective (such as doCarefully method), did I make the code more or less abstract? The answer is - I made it **less** abstract. Is it a joke? Not really, as I actually revealed more information about what is to be done. I stopped hiding certain implementation details, such as how many distinct things are to be done. Does the client have to do anything with this additional information? Absolutely not! Look at the 3 clients below.
 
 ```java
 private static void doCarefully(ThingsToDo toDo) {
@@ -194,20 +200,20 @@ private static void doAsMuchAsYouCan(ThingsToDo thingsToDo) {
 }
 ```
 
-- doCarefully is the old unchanched version. The perspective of this method was broaden, but introducing new abstraction did not require existing code to change.
+- doCarefully is the old unchanged version. The perspective of this method was broadened, but introducing new abstraction did not require existing code to change.
 
 - doQuickly decides not to care about this additional information. It's perspective is as narrow as doCarefully's perspective before we introduced the new abstraction.
 
 - doAsMuchAsYouCan perspective is as broad as doCarefully and on top of it, this method decided to make use of the new piece of information. It does not start a new task if the previous ones
 took more than 100ms and returns the control back to the caller (obviously it does not mean it will finish within 100ms)
 
-A decision what not to care about is made not only by the thing that implements the abstraction. It is also made by a client of the abstraction. Thus, it is not only matter of hiding something. 
-It is actually a matter of perspective. **Think about a cylinder and a a cuboid. They don't have to hide anything, but one perspective (frontal) make them appear the same and other (from the top) - different**.
+A decision not to care about something is made not only by the thing that implements the abstraction. It is also made by a client of the abstraction. Thus, it is not only a matter of hiding something. 
+It is actually a matter of perspective. **Think about a cylinder and a cuboid. They don't have to hide anything, but one perspective (frontal) make them appear the same and other (from the top) - different**.
 
 
 ## Free lunch
 
-Inverting the claim made earlier, one can conclude that as we make ThingsToRun **less abstract**, it
+Inverting the claim made earlier, one can conclude that as we make ThingsToRun **less abstract**
 
 - increases the level of a client's control over the abstract thing that
 
@@ -221,7 +227,7 @@ Don't worry - we still have a trade-off to make. It just lies somewhere else. I 
 as clients are concerned, for free.
 
 The secret that made is possible is that we did not simply introduce some abstraction. We **decomposed existing abstraction**. As we mentioned earlier, an abstraction represents a concept, so 
-we **decomposed a concept into sub-concepts**, or **broken down a problem into sub-problems**. Problem decomposition is one of the most important skills of any software developer and it is a indespensible part of **Domain Driven Design**, when we decompose the concepts along according to our understanding of the domain, and by doing so we also start understanding and describing the domain better. We ask domain expert a question such as: 
+we **decomposed a concept into sub-concepts**, or **broken down a problem into sub-problems**. Problem decomposition is one of the most important skills of any software developer and it is a an indispensable part of **Domain Driven Design**, when we decompose the concepts along according to our understanding of the domain, and by doing so we also start understanding and describing the domain better. We ask domain experts questions such as: 
 
 - is it all we know about ThingsToDo?
 
@@ -229,14 +235,14 @@ we **decomposed a concept into sub-concepts**, or **broken down a problem into s
 
 - When I start doing something, do I have to finish it?
 
-- Show me two ThingsToDo that have absolutely nothing in common. Why you still think you should still describe it using the same concept?
+- Show me two ThingsToDo that have absolutely nothing in common. Why do you still think you should still describe it using the same concept?
 
 - etc. etc.
 
-Once you found some abstractions, it is good idea to follow up with more questions and try to decompose it further. It is good idea not to do it blindly, but with domain knowledge at hand. Sometimes
+Once you find some abstractions, it is a good idea to follow up with more questions and try to decompose it further. It is good idea not to do it blindly, but with domain knowledge at hand. Sometimes
 it is domain knowledge that drives decomposition, sometimes it is a decomposition itself that triggers more questions for domain experts.
 
-Taking more pragmatic angle, problem decomposition has one very important benefit - it makes you design... composable. It means that instead of writing more code to solve new problems, you can start composing solutions from subsolutions. How many solutions you get for free when you have 3 abstraction clients and 2 abstract things?
+Taking a more pragmatic angle, problem decomposition has one very important benefit - it makes you design... composable. It means that instead of writing more code to solve new problems, you can start composing solutions from subsolutions. How many solutions do you get for free when you have 3 abstraction clients and 2 abstract things?
 
 ```
 static void doThings() {
@@ -264,7 +270,7 @@ static void doThings() {
 }
 ```
 
-Or, in other words, how many lines of code and potential bugs you saved by not having to write them in a first place? Abstraction decomposition is so powerful because as the code becomes composable,
+Or, in other words, how many lines of code and potential bugs you saved by not having to write them in the first place? Abstraction decomposition is so powerful because as the code becomes composable,
 it also becomes [orthogonal](https://en.wikipedia.org/wiki/Orthogonality_(programming)) - each problem is solved once and for all and "it is associated with simplicity; the more orthogonal the design, the fewer exceptions. This makes it easier to learn, read and write programs in a programming language".
 
 
@@ -303,8 +309,8 @@ private static ThingsToDo importantThingsToDoAfter() {
 
 The trade-off is hence the following.
 
-**By decomposing abstractions you increase number of things to name when you implement the abstraction**. It can be a cost, or it acn be an opportunity. So here is another trade-off.
-Taking time to name things properly increases understanding increases maintainability as saves time in a long run, but takes more time in a short run.
+**By decomposing abstractions you increase number of things to name when you implement the abstraction**. It can be a cost, but it is also an opportunity. So here is another trade-off.
+Taking time to name things properly increases understanding, increases maintainability as it saves time in a long run, but takes more time in the short run.
 
 The final list of features is the following.
 
@@ -317,7 +323,7 @@ The final list of features is the following.
 
 **Abstraction decomposition**
 
-- takes more time when inplementing an abstraction
+- takes more time when implementing an abstraction
 
 but also
 
