@@ -7,7 +7,9 @@ tags: ["software", "design", "software-design", "java"]
 
 <p class="excerpt">
 When it comes to abstractions, less can be more and the trade-offs you need to make may not be the ones you think.
-<p>
+Let me prove it.  
+</p>
+<span class="readmore"/>
 
 
 
@@ -25,7 +27,9 @@ same
 
 On a more serious note, see the java code below. 
 
-By the way, this post is a continuation of the [previous post](2020-04-13-are-you-imperator) post, so it would be beneficial to read it first.
+By the way, this post is a continuation of the
+[previous article]({% post_url 2020-04-12-are-you-imperator %})
+post, so it would be beneficial to read it first.
 
 What can you say about the method doThings() - "is it something" or does it "do something"?
 
@@ -244,7 +248,7 @@ it is domain knowledge that drives decomposition, sometimes it is a decompositio
 
 Taking a more pragmatic angle, problem decomposition has one very important benefit - it makes you design... composable. It means that instead of writing more code to solve new problems, you can start composing solutions from subsolutions. How many solutions do you get for free when you have 3 abstraction clients and 2 abstract things?
 
-```
+```java
 static void doThings() {
     ThingsToDo importantThingsToDo = importantThingsToDo();
     ThingsToDo funThingsToDo = funThingsToDo();
@@ -310,7 +314,7 @@ private static ThingsToDo importantThingsToDoAfter() {
 The trade-off is hence the following.
 
 **By decomposing abstractions you increase number of things to name when you implement the abstraction**. It can be a cost, but it is also an opportunity. So here is another trade-off.
-Taking time to name things properly increases understanding, increases maintainability as it saves time in a long run, but takes more time in the short run.
+Taking time to name things properly increases understanding, increases maintainability as it saves time in the long run, but takes more time in the short run.
 
 The final list of features is the following.
 
@@ -333,11 +337,11 @@ but also
 
 - decreases the number of lines of code
 
-And finally, The conclusions I want to leave you with that occured to me after writing this post are the following.
+And finally, The conclusions I want to leave you with that occurred to me after writing this post are the following.
 
-- **An abstraction is not as only a matter of what's hidden, it equally matter of the perspective**
+- **An abstraction is not as only a matter of what's hidden, it is equally a matter of the perspective**
 
-- **Abstraction decomposition, when done properly, has more pros than cons**.
+- **Abstraction decomposition, when modeled according to the domain concepts, has more pros than cons**.
 
 
 

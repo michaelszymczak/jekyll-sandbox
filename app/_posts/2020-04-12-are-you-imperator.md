@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "You are Imperator"
+title:  "Are you Imperator"
 category: software
 tags: ["software", "design", "software-design", "java"]
 ---
