@@ -205,7 +205,7 @@ private static ThingsToDo moreThingsToDo() {
 
 We can finally use it as a thing to do
 
-```
+```java
 static void doThings() {
     // a thing
     ThingsToDo thingsToDo = thingsToDo();
@@ -219,7 +219,7 @@ static void doThings() {
 
 Since Java8 we can remove a boiler plate code by using a method reference
 
-```
+```java
 static void doThings() {
     // a thing
     ThingsToDo thingsToDo = thingsToDo();
@@ -236,7 +236,7 @@ This syntax is quite convinient, but under the hood it is an equivalent of what 
 
 ## Why should I care?
 
-If you have just spent 5 minutes of your life reading this to discover that verbs are not nouns and to "do something" is not the same as to "be something", and it bear no further implications, you woul have every right to be disapointed. And believe me, I would be more disapointed as it would mean that I wasted 3 hours writing it.
+If you have just spent 5 minutes of your life reading this to discover that verbs are not nouns and to "do something" is not the same as to "be something", and it bore no fruits, you would have every right to be disapointed. And believe me, I would be more disapointed as it would mean that I wasted 3 hours writing it.
 
-So this is what I really want to tell you. This distinction makes all the difference. Nouns/things make for a great building blocks of a composable software, verbs are important and neccesary parts, but are also fraught with perils. It's so important distinction that the whole patterns and paradigms, such as functional programming were built around it as even one verb can destroy the whole tree of nouns and render the whole thing unusable. Quoting the Joe Armstrong, creator of Erlang, you wanted a banana but what you got was a gorilla holding the banana and the entire jungle. Last but not least, this distinction helps with names.
+So this is what I really want to tell you. This distinction makes all the difference. Nouns/things make for great building blocks of a composable software, verbs are important and neccesary parts, but are also fraught with perils. It's so important distinction that the whole patterns and paradigms, such as functional programming were built around it as even one verb can destroy the whole tree of nouns and render the whole thing unusable. Quoting the Joe Armstrong, creator of Erlang, you wanted a banana but what you got was a gorilla holding the banana and the entire jungle. Last but not least, this distinction helps with names.
 
