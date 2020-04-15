@@ -192,12 +192,13 @@ private static void doAsMuchAsYouCan(ThingsToDo thingsToDo) {
     long startTime = System.currentTimeMillis();
     int thingsDone = 0;
     thingsToDo.things().forEach(thingToDo -> {
-        if (startTime + 100 > System.currentTimeMillis()) {
+        if (startTime + 100 < System.currentTimeMillis()) {
             System.out.println(
                     "Sorry, come back later, done "
                             + thingsDone + " out of " +
                             thingsToDo.things().size()
             );
+            return;
         }
         doQuickly(thingsToDo);
     });
